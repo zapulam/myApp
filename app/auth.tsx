@@ -153,7 +153,7 @@ export default function AuthScreen() {
       opacity: 0.6,
     },
     buttonText: {
-      color: 'white',
+      color: colorScheme === 'dark' ? '#000' : 'white',
       fontSize: 18,
       fontWeight: '600',
     },
@@ -252,7 +252,7 @@ export default function AuthScreen() {
               disabled={loading}
             >
               {loading ? (
-                <ActivityIndicator color="white" />
+                <ActivityIndicator color={colorScheme === 'dark' ? '#000' : 'white'} />
               ) : (
                 <Text style={styles.buttonText}>
                   {isLogin ? 'Sign In' : 'Create Account'}
