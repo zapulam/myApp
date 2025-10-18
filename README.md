@@ -138,7 +138,3 @@ python test_api.py
 npm start
 # Then press 'i' for iOS or 'a' for Android
 ```
-
-## 📄 License
-
-This project is licensed under the MIT License.
