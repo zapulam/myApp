@@ -33,9 +33,39 @@ uvicorn main:app --host 0.0.0.0 --port 8000
 ## API Endpoints
 
 - `GET /` - Health check
-- `POST /auth/signup` - Create new user account
-- `POST /auth/login` - Authenticate user
+- `POST /auth/signup` - Create new user account (sends verification email)
+- `POST /auth/login` - Authenticate user (requires verified email)
 - `GET /auth/me` - Get current user info (requires token)
+- `POST /auth/verify-email` - Verify email with token
+- `POST /auth/resend-verification` - Resend verification email
+
+## Email Verification
+
+The app includes email verification for new user accounts:
+
+1. **Signup Flow**: Users sign up → receive verification email → verify email → can log in
+2. **Verification Links**: Email contains localhost links that open in your mobile app
+
+### Required Environment Variables:
+```env
+# Email Settings
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD=your-app-password
+MAIL_FROM=your-email@gmail.com
+MAIL_FROM_NAME=MyApp
+MAIL_SERVER=smtp.gmail.com
+MAIL_PORT=587
+MAIL_STARTTLS=True
+MAIL_SSL_TLS=False
+
+# Frontend URL (for verification links)
+FRONTEND_URL=http://localhost:8081
+```
+
+### Gmail Setup:
+1. Enable 2-factor authentication
+2. Generate an "App Password" (not your regular password)
+3. Use the app password in `MAIL_PASSWORD`
 
 ## Database
 

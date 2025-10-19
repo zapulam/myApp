@@ -5,6 +5,7 @@ export interface User {
   email: string;
   name: string;
   is_active: boolean;
+  is_verified: boolean;
   created_at: string;
 }
 
@@ -22,6 +23,19 @@ export interface SignupData {
 export interface LoginData {
   email: string;
   password: string;
+}
+
+export interface EmailVerificationResponse {
+  message: string;
+  email: string;
+}
+
+export interface VerifyEmailData {
+  token: string;
+}
+
+export interface ResendVerificationData {
+  email: string;
 }
 
 class ApiService {
@@ -101,6 +115,20 @@ class ApiService {
 
   async healthCheck(): Promise<{ message: string }> {
     return this.request<{ message: string }>('/');
+  }
+
+  async verifyEmail(token: string): Promise<EmailVerificationResponse> {
+    return this.request<EmailVerificationResponse>('/auth/verify-email', {
+      method: 'POST',
+      body: JSON.stringify({ token }),
+    });
+  }
+
+  async resendVerification(email: string): Promise<EmailVerificationResponse> {
+    return this.request<EmailVerificationResponse>('/auth/resend-verification', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    });
   }
 }
 

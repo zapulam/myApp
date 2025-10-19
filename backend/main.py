@@ -10,7 +10,8 @@ from sqlalchemy.orm import Session
 from auth import verify_password, get_password_hash, create_access_token, verify_token
 from database import get_db, engine, SessionLocal
 from models import Base, User
-from schemas import UserCreate, UserResponse, UserLogin, Token
+from schemas import UserCreate, UserResponse, UserLogin, Token, EmailVerificationRequest, EmailVerificationResponse, VerifyEmailRequest
+from email_service import generate_verification_token, send_verification_email_simple
 
 
 # Load environment variables
@@ -48,7 +49,7 @@ async def root():
 
 @app.post("/auth/signup", response_model=UserResponse)
 async def signup(user: UserCreate, db: Session = Depends(get_db_session)):
-    """Create a new user account"""
+    """Create a new user account with email verification"""
     
     # Check if user already exists
     existing_user = db.query(User).filter(User.email == user.email).first()
@@ -58,17 +59,35 @@ async def signup(user: UserCreate, db: Session = Depends(get_db_session)):
             detail="Email already registered"
         )
     
-    # Create new user
+    # Generate verification token
+    verification_token = generate_verification_token()
+    
+    # Create new user (not verified initially)
     hashed_password = get_password_hash(user.password)
     db_user = User(
         email=user.email,
         name=user.name,
-        hashed_password=hashed_password
+        hashed_password=hashed_password,
+        is_verified=False,
+        verification_token=verification_token
     )
     
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+    
+    # Send verification email
+    try:
+        email_sent = await send_verification_email_simple(
+            user.email, 
+            user.name, 
+            verification_token
+        )
+        if not email_sent:
+            print(f"Warning: Failed to send verification email to {user.email}")
+    except Exception as e:
+        print(f"Error sending verification email: {e}")
+        # Don't fail signup if email sending fails
     
     return db_user
 
@@ -92,6 +111,12 @@ async def login(user_credentials: UserLogin, db: Session = Depends(get_db_sessio
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Inactive user"
+        )
+    
+    if not user.is_verified:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email not verified. Please check your email and click the verification link."
         )
     
     # Create access token
@@ -132,6 +157,87 @@ async def get_current_user(authorization: str = Header(None), db: Session = Depe
         )
     
     return user
+
+
+@app.post("/auth/verify-email", response_model=EmailVerificationResponse)
+async def verify_email(request: VerifyEmailRequest, db: Session = Depends(get_db_session)):
+    """Verify user email with token"""
+    from models import User
+    
+    # Find user by verification token
+    user = db.query(User).filter(User.verification_token == request.token).first()
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired verification token"
+        )
+    
+    if user.is_verified:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already verified"
+        )
+    
+    # Mark user as verified and clear token
+    user.is_verified = True
+    user.verification_token = None
+    db.commit()
+    
+    return EmailVerificationResponse(
+        message="Email verified successfully! You can now log in.",
+        email=user.email
+    )
+
+
+@app.post("/auth/resend-verification", response_model=EmailVerificationResponse)
+async def resend_verification(request: EmailVerificationRequest, db: Session = Depends(get_db_session)):
+    """Resend verification email"""
+    from models import User
+    
+    # Find user by email
+    user = db.query(User).filter(User.email == request.email).first()
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
+    if user.is_verified:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already verified"
+        )
+    
+    # Generate new verification token
+    verification_token = generate_verification_token()
+    user.verification_token = verification_token
+    db.commit()
+    
+    # Send verification email
+    try:
+        email_sent = await send_verification_email_simple(
+            user.email, 
+            user.name, 
+            verification_token
+        )
+        if not email_sent:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to send verification email"
+            )
+    except Exception as e:
+        print(f"Error sending verification email: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to send verification email"
+        )
+    
+    return EmailVerificationResponse(
+        message="Verification email sent successfully!",
+        email=user.email
+    )
 
 
 if __name__ == "__main__":    

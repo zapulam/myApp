@@ -23,6 +23,7 @@ class UserCreate(UserBase):
 class UserResponse(UserBase):
     id: int
     is_active: bool
+    is_verified: bool
     created_at: datetime
     
     class Config:
@@ -41,3 +42,16 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+
+
+class EmailVerificationRequest(BaseModel):
+    email: EmailStr
+
+
+class EmailVerificationResponse(BaseModel):
+    message: str
+    email: str
+
+
+class VerifyEmailRequest(BaseModel):
+    token: str

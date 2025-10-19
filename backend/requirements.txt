@@ -7,3 +7,5 @@ sqlalchemy
 python-dotenv
 pydantic[email]
 requests
+fastapi-mail
+jinja2

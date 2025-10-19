@@ -72,9 +72,8 @@ export default function AuthScreen() {
         const user = await apiService.signup({ email, name, password });
         console.log('Signup successful:', user);
         
-        Alert.alert('Success', 'Account created successfully!', [
-          { text: 'OK', onPress: () => setIsLogin(true) }
-        ]);
+        // Navigate to verification pending page
+        router.replace(`/verification-pending?email=${encodeURIComponent(email)}`);
       }
     } catch (error) {
       console.error('Auth error:', error);
