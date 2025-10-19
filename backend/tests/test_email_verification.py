@@ -5,6 +5,12 @@ Run this after setting up your email configuration
 
 import asyncio
 import os
+import sys
+from pathlib import Path
+
+# Add the parent directory to the path so we can import from backend
+sys.path.append(str(Path(__file__).parent.parent))
+
 from dotenv import load_dotenv
 from email_service import generate_verification_token, send_verification_email_simple
 

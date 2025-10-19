@@ -67,6 +67,20 @@ FRONTEND_URL=http://localhost:8081
 2. Generate an "App Password" (not your regular password)
 3. Use the app password in `MAIL_PASSWORD`
 
+## Testing
+
+Run the test scripts from the `tests/` directory:
+
+```bash
+# Test API endpoints
+python tests/test_api.py
+
+# Test email verification setup
+python tests/test_email_verification.py
+```
+
+**Note**: Make sure the backend server is running before running the API tests.
+
 ## Database
 
 ### **Development (SQLite):**
