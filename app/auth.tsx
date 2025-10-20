@@ -3,6 +3,7 @@ import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { apiService } from '@/services/api';
 import { storageService } from '@/services/storage';
+import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -22,26 +23,67 @@ export default function AuthScreen() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showError, setShowError] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
   const colorScheme = useColorScheme();
 
+  const showErrorAlert = (message: string) => {
+    setErrorMessage(message);
+    setShowError(true);
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+      setShowError(false);
+    }, 5000);
+  };
+
+  // Check if all required fields are filled
+  const isFormValid = () => {
+    if (isLogin) {
+      return email.trim() !== '' && password.trim() !== '';
+    } else {
+      return email.trim() !== '' && password.trim() !== '' && name.trim() !== '';
+    }
+  };
+
+  // Handle password change and clear error
+  const handlePasswordChange = (text: string) => {
+    setPassword(text);
+    if (passwordError) {
+      setPasswordError('');
+    }
+  };
+
   const handleAuth = async () => {
+    console.log('handleAuth called with:', { email, password, name, isLogin });
+    
+    // Test validation with empty fields
     if (!email || !password) {
-      Alert.alert('Error', 'Please fill in all required fields');
+      console.log('Validation failed: missing email or password');
+      showErrorAlert('Please fill in all required fields');
       return;
     }
 
-    if (!isLogin && password !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match');
+    // Test password length validation
+    if (password.length < 8) {
+      console.log('Validation failed: password too short', password.length);
+      setPasswordError('Password must be at least 8 characters long');
       return;
+    } else {
+      setPasswordError(''); // Clear password error if valid
     }
 
+    // Test name validation for sign up
     if (!isLogin && !name.trim()) {
-      Alert.alert('Error', 'Please enter your name');
+      console.log('Validation failed: missing name');
+      showErrorAlert('Please enter your name');
       return;
     }
+
+    console.log('All validations passed, proceeding with auth...');
 
     setLoading(true);
 
@@ -87,8 +129,9 @@ export default function AuthScreen() {
     setIsLogin(!isLogin);
     setEmail('');
     setPassword('');
-    setConfirmPassword('');
     setName('');
+    setShowPassword(false);
+    setPasswordError('');
   };
 
   const styles = StyleSheet.create({
@@ -140,6 +183,29 @@ export default function AuthScreen() {
       backgroundColor: Colors[colorScheme ?? 'light'].background,
       color: Colors[colorScheme ?? 'light'].text,
     },
+    passwordContainer: {
+      position: 'relative',
+    },
+    passwordInput: {
+      borderWidth: 1,
+      borderColor: colorScheme === 'dark' ? '#333' : '#ddd',
+      borderRadius: 12,
+      paddingHorizontal: 16,
+      paddingVertical: 14,
+      paddingRight: 50,
+      fontSize: 16,
+      backgroundColor: Colors[colorScheme ?? 'light'].background,
+      color: Colors[colorScheme ?? 'light'].text,
+    },
+    toggleButton: {
+      position: 'absolute',
+      right: 16,
+      top: 0,
+      bottom: 0,
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: 40,
+    },
     button: {
       backgroundColor: Colors[colorScheme ?? 'light'].tint,
       borderRadius: 12,
@@ -148,7 +214,7 @@ export default function AuthScreen() {
       marginTop: 10,
     },
     buttonDisabled: {
-      backgroundColor: Colors[colorScheme ?? 'light'].tint + '80',
+      backgroundColor: colorScheme === 'dark' ? '#555' : '#ccc',
       opacity: 0.6,
     },
     buttonText: {
@@ -161,7 +227,7 @@ export default function AuthScreen() {
       justifyContent: 'center',
       marginTop: 30,
     },
-    toggleText: {
+    toggleContainerText: {
       fontSize: 16,
       color: Colors[colorScheme ?? 'light'].text,
     },
@@ -169,6 +235,55 @@ export default function AuthScreen() {
       color: Colors[colorScheme ?? 'light'].tint,
       fontWeight: '600',
       marginLeft: 5,
+    },
+    errorContainer: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 1000,
+    },
+    errorBox: {
+      backgroundColor: Colors[colorScheme ?? 'light'].background,
+      borderRadius: 12,
+      padding: 20,
+      margin: 20,
+      maxWidth: 300,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    errorText: {
+      flex: 1,
+      fontSize: 16,
+      color: Colors[colorScheme ?? 'light'].text,
+      textAlign: 'center',
+    },
+    errorCloseButton: {
+      marginLeft: 10,
+      padding: 5,
+    },
+    errorCloseText: {
+      fontSize: 24,
+      color: Colors[colorScheme ?? 'light'].text,
+      fontWeight: 'bold',
+    },
+    passwordErrorText: {
+      color: '#ff4444',
+      fontSize: 14,
+      marginBottom: 8,
+      marginLeft: 4,
     },
   });
 
@@ -221,34 +336,36 @@ export default function AuthScreen() {
 
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Password</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter your password"
-                placeholderTextColor={Colors[colorScheme ?? 'light'].text + '80'}
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-              />
+              {passwordError ? (
+                <Text style={styles.passwordErrorText}>{passwordError}</Text>
+              ) : null}
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  style={styles.passwordInput}
+                  placeholder="Enter your password"
+                  placeholderTextColor={Colors[colorScheme ?? 'light'].text + '80'}
+                  value={password}
+                  onChangeText={handlePasswordChange}
+                  secureTextEntry={!showPassword}
+                />
+                <TouchableOpacity
+                  style={styles.toggleButton}
+                  onPress={() => setShowPassword(!showPassword)}
+                >
+                  <Ionicons
+                    name={showPassword ? 'lock-open' : 'lock-closed'}
+                    size={20}
+                    color={Colors[colorScheme ?? 'light'].tint}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
 
-            {!isLogin && (
-              <View style={styles.inputContainer}>
-                <Text style={styles.label}>Confirm Password</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Confirm your password"
-                  placeholderTextColor={Colors[colorScheme ?? 'light'].text + '80'}
-                  value={confirmPassword}
-                  onChangeText={setConfirmPassword}
-                  secureTextEntry
-                />
-              </View>
-            )}
 
             <TouchableOpacity 
-              style={[styles.button, loading && styles.buttonDisabled]} 
+              style={[styles.button, (loading || !isFormValid()) && styles.buttonDisabled]} 
               onPress={handleAuth}
-              disabled={loading}
+              disabled={loading || !isFormValid()}
             >
               {loading ? (
                 <ActivityIndicator color={colorScheme === 'dark' ? '#000' : 'white'} />
@@ -259,8 +376,9 @@ export default function AuthScreen() {
               )}
             </TouchableOpacity>
 
+
             <View style={styles.toggleContainer}>
-              <Text style={styles.toggleText}>
+              <Text style={styles.toggleContainerText}>
                 {isLogin ? "Don't have an account?" : 'Already have an account?'}
               </Text>
               <TouchableOpacity onPress={toggleAuthMode}>
@@ -272,6 +390,21 @@ export default function AuthScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      
+      {/* Custom Error Display */}
+      {showError && (
+        <View style={styles.errorContainer}>
+          <View style={styles.errorBox}>
+            <Text style={styles.errorText}>{errorMessage}</Text>
+            <TouchableOpacity 
+              style={styles.errorCloseButton}
+              onPress={() => setShowError(false)}
+            >
+              <Text style={styles.errorCloseText}>×</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </ThemedView>
   );
 }
