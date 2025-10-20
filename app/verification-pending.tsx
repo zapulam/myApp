@@ -51,7 +51,7 @@ export default function VerificationPendingScreen() {
           subtitle="We've sent a verification link to your email address. Please check your inbox and click the link to verify your account."
           icon="📧"
         />
-        {email && (
+        {email && email.trim() && (
           <Text style={styles.emailText}>{email}</Text>
         )}
 

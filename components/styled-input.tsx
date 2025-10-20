@@ -52,7 +52,7 @@ export function StyledInput({
 
   const labelTop = labelAnimation.interpolate({
     inputRange: [0, 1],
-    outputRange: [size === 'large' ? 18 : 14, -8],
+    outputRange: [size === 'large' ? 18 : 14, -12],
   });
 
   // Removed labelScale to keep text size consistent
@@ -73,6 +73,8 @@ export function StyledInput({
               color: labelColor,
               backgroundColor: Colors[colorScheme ?? 'light'].background,
               paddingHorizontal: 4,
+              paddingVertical: 2,
+              borderRadius: 4,
               zIndex: 1,
               pointerEvents: 'none', // Allow clicks to pass through to the input
             },
