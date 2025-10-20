@@ -1,22 +1,22 @@
+import { ErrorDisplay } from '@/components/error-display';
+import { ScreenHeader } from '@/components/screen-header';
+import { StyledButton } from '@/components/styled-button';
+import { StyledInput } from '@/components/styled-input';
 import { ThemedView } from '@/components/themed-view';
-import { Colors } from '@/constants/theme';
+import { createSharedStyles } from '@/constants/shared-styles';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { apiService } from '@/services/api';
 import { storageService } from '@/services/storage';
-import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
-  ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 
 export default function AuthScreen() {
@@ -134,160 +134,7 @@ export default function AuthScreen() {
     setPasswordError('');
   };
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: Colors[colorScheme ?? 'light'].background,
-    },
-    scrollContainer: {
-      flexGrow: 1,
-      justifyContent: 'center',
-      padding: 16,
-    },
-    header: {
-      alignItems: 'center',
-      marginBottom: 24,
-    },
-    title: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginBottom: 6,
-      color: Colors[colorScheme ?? 'light'].text,
-    },
-    subtitle: {
-      fontSize: 14,
-      color: Colors[colorScheme ?? 'light'].text,
-      opacity: 0.7,
-    },
-    form: {
-      width: '100%',
-      maxWidth: 400,
-      alignSelf: 'center',
-    },
-    inputContainer: {
-      marginBottom: 16,
-    },
-    label: {
-      fontSize: 14,
-      fontWeight: '600',
-      marginBottom: 6,
-      color: Colors[colorScheme ?? 'light'].text,
-    },
-    input: {
-      borderWidth: 1,
-      borderColor: colorScheme === 'dark' ? '#333' : '#ddd',
-      borderRadius: 10,
-      paddingHorizontal: 12,
-      paddingVertical: 10,
-      fontSize: 14,
-      backgroundColor: Colors[colorScheme ?? 'light'].background,
-      color: Colors[colorScheme ?? 'light'].text,
-    },
-    passwordContainer: {
-      position: 'relative',
-    },
-    passwordInput: {
-      borderWidth: 1,
-      borderColor: colorScheme === 'dark' ? '#333' : '#ddd',
-      borderRadius: 10,
-      paddingHorizontal: 12,
-      paddingVertical: 10,
-      paddingRight: 40,
-      fontSize: 14,
-      backgroundColor: Colors[colorScheme ?? 'light'].background,
-      color: Colors[colorScheme ?? 'light'].text,
-    },
-    toggleButton: {
-      position: 'absolute',
-      right: 12,
-      top: 0,
-      bottom: 0,
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: 32,
-    },
-    button: {
-      backgroundColor: Colors[colorScheme ?? 'light'].tint,
-      borderRadius: 10,
-      paddingVertical: 12,
-      alignItems: 'center',
-      marginTop: 8,
-    },
-    buttonDisabled: {
-      backgroundColor: colorScheme === 'dark' ? '#555' : '#ccc',
-      opacity: 0.6,
-    },
-    buttonText: {
-      color: colorScheme === 'dark' ? '#000' : 'white',
-      fontSize: 16,
-      fontWeight: '600',
-    },
-    toggleContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 20,
-    },
-    toggleContainerText: {
-      fontSize: 14,
-      color: Colors[colorScheme ?? 'light'].text,
-    },
-    toggleLink: {
-      color: Colors[colorScheme ?? 'light'].tint,
-      fontWeight: '600',
-      marginLeft: 5,
-      fontSize: 14,
-    },
-    errorContainer: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      justifyContent: 'center',
-      alignItems: 'center',
-      zIndex: 1000,
-    },
-    errorBox: {
-      backgroundColor: Colors[colorScheme ?? 'light'].background,
-      borderRadius: 12,
-      padding: 20,
-      margin: 20,
-      maxWidth: 300,
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    errorText: {
-      flex: 1,
-      fontSize: 16,
-      color: Colors[colorScheme ?? 'light'].text,
-      textAlign: 'center',
-    },
-    errorCloseButton: {
-      marginLeft: 10,
-      padding: 5,
-    },
-    errorCloseText: {
-      fontSize: 24,
-      color: Colors[colorScheme ?? 'light'].text,
-      fontWeight: 'bold',
-    },
-    passwordErrorText: {
-      color: '#ff4444',
-      fontSize: 12,
-      marginBottom: 6,
-      marginLeft: 4,
-    },
-  });
+  const styles = createSharedStyles(colorScheme as 'light' | 'dark' | null | undefined);
 
   return (
     <ThemedView style={styles.container}>
@@ -296,91 +143,47 @@ export default function AuthScreen() {
         style={styles.container}
       >
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <View style={styles.header}>
-            <Text style={styles.title}>
-              {isLogin ? 'Welcome Back' : 'Create Account'}
-            </Text>
-            <Text style={styles.subtitle}>
-              {isLogin
-                ? 'Sign in to your account'
-                : 'Sign up to get started'}
-            </Text>
-          </View>
+          <ScreenHeader
+            title={isLogin ? 'Welcome Back' : 'Create Account'}
+            subtitle={isLogin ? 'Sign in to your account' : 'Sign up to get started'}
+          />
 
           <View style={styles.form}>
             {!isLogin && (
-              <View style={styles.inputContainer}>
-                <Text style={styles.label}>Full Name</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Enter your full name"
-                  placeholderTextColor={Colors[colorScheme ?? 'light'].text + '80'}
-                  value={name}
-                  onChangeText={setName}
-                  autoCapitalize="words"
-                />
-              </View>
+              <StyledInput
+                label="Full Name"
+                value={name}
+                onChangeText={setName}
+                autoCapitalize="words"
+              />
             )}
 
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Email</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter your email"
-                placeholderTextColor={Colors[colorScheme ?? 'light'].text + '80'}
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-            </View>
+            <StyledInput
+              label="Email"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
 
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Password</Text>
-              {passwordError ? (
-                <Text style={styles.passwordErrorText}>{passwordError}</Text>
-              ) : null}
-              <View style={styles.passwordContainer}>
-                <TextInput
-                  style={styles.passwordInput}
-                  placeholder="Enter your password"
-                  placeholderTextColor={Colors[colorScheme ?? 'light'].text + '80'}
-                  value={password}
-                  onChangeText={handlePasswordChange}
-                  secureTextEntry={!showPassword}
-                />
-                <TouchableOpacity
-                  style={styles.toggleButton}
-                  onPress={() => setShowPassword(!showPassword)}
-                >
-                  <Ionicons
-                    name={showPassword ? 'lock-open' : 'lock-closed'}
-                    size={20}
-                    color={Colors[colorScheme ?? 'light'].tint}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
+            <StyledInput
+              label="Password"
+              value={password}
+              onChangeText={handlePasswordChange}
+              secureTextEntry={true}
+              error={passwordError}
+            />
 
-
-            <TouchableOpacity 
-              style={[styles.button, (loading || !isFormValid()) && styles.buttonDisabled]} 
+            <StyledButton
+              title={isLogin ? 'Sign In' : 'Create Account'}
               onPress={handleAuth}
               disabled={loading || !isFormValid()}
-            >
-              {loading ? (
-                <ActivityIndicator color={colorScheme === 'dark' ? '#000' : 'white'} />
-              ) : (
-                <Text style={styles.buttonText}>
-                  {isLogin ? 'Sign In' : 'Create Account'}
-                </Text>
-              )}
-            </TouchableOpacity>
-
+              loading={loading}
+            />
 
             <View style={styles.toggleContainer}>
-              <Text style={styles.toggleContainerText}>
+              <Text style={styles.toggleText}>
                 {isLogin ? "Don't have an account?" : 'Already have an account?'}
               </Text>
               <TouchableOpacity onPress={toggleAuthMode}>
@@ -393,20 +196,11 @@ export default function AuthScreen() {
         </ScrollView>
       </KeyboardAvoidingView>
       
-      {/* Custom Error Display */}
-      {showError && (
-        <View style={styles.errorContainer}>
-          <View style={styles.errorBox}>
-            <Text style={styles.errorText}>{errorMessage}</Text>
-            <TouchableOpacity 
-              style={styles.errorCloseButton}
-              onPress={() => setShowError(false)}
-            >
-              <Text style={styles.errorCloseText}>×</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
+      <ErrorDisplay
+        message={errorMessage}
+        visible={showError}
+        onClose={() => setShowError(false)}
+      />
     </ThemedView>
   );
 }

@@ -1,11 +1,13 @@
+import { ScreenHeader } from '@/components/screen-header';
+import { StyledButton } from '@/components/styled-button';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Colors } from '@/constants/theme';
+import { createSharedStyles } from '@/constants/shared-styles';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { storageService, StoredUser } from '@/services/storage';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, View } from 'react-native';
 
 export default function HomeScreen() {
   const [user, setUser] = useState<StoredUser | null>(null);
@@ -38,74 +40,26 @@ export default function HomeScreen() {
     }
   };
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: Colors[colorScheme ?? 'light'].background,
-      padding: 20,
-    },
-    header: {
-      alignItems: 'center',
-      marginTop: 60,
-      marginBottom: 40,
-    },
-    title: {
-      fontSize: 28,
-      fontWeight: 'bold',
-      color: Colors[colorScheme ?? 'light'].text,
-      marginBottom: 8,
-    },
-    subtitle: {
-      fontSize: 16,
-      color: Colors[colorScheme ?? 'light'].text,
-      opacity: 0.7,
-      textAlign: 'center',
-    },
-    content: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    welcomeText: {
-      fontSize: 20,
-      color: Colors[colorScheme ?? 'light'].text,
-      textAlign: 'center',
-      marginBottom: 30,
-    },
-    logoutButton: {
-      backgroundColor: '#ff4444',
-      borderRadius: 12,
-      paddingVertical: 12,
-      paddingHorizontal: 24,
-    },
-    logoutButtonText: {
-      color: 'white',
-      fontSize: 16,
-      fontWeight: '600',
-    },
-  });
+  const styles = createSharedStyles(colorScheme as 'light' | 'dark' | null | undefined);
 
   return (
     <ThemedView style={styles.container}>
-      <View style={styles.header}>
-        <ThemedText type="title" style={styles.title}>
-          Welcome to MyApp!
-        </ThemedText>
-        <ThemedText style={styles.subtitle}>
-          You have successfully authenticated
-        </ThemedText>
-      </View>
+      <ScreenHeader
+        title="Welcome to MyApp!"
+        subtitle="You have successfully authenticated"
+        withTopMargin={true}
+      />
 
-      <View style={styles.content}>
+      <View style={styles.centeredContent}>
         <ThemedText style={styles.welcomeText}>
           🎉 Welcome back, {user?.name || 'User'}! You're now logged in.
         </ThemedText>
         
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <ThemedText style={styles.logoutButtonText}>
-            Logout
-          </ThemedText>
-        </TouchableOpacity>
+        <StyledButton
+          title="Logout"
+          onPress={handleLogout}
+          variant="danger"
+        />
       </View>
     </ThemedView>
   );
