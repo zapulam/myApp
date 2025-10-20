@@ -57,10 +57,8 @@ export function StyledInput({
 
   // Removed labelScale to keep text size consistent
 
-  const labelColor = labelAnimation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [Colors[colorScheme ?? 'light'].text + '80', Colors[colorScheme ?? 'light'].tint],
-  });
+  // Keep label color consistent (grey) instead of changing to theme tint
+  const labelColor = Colors[colorScheme ?? 'light'].text + '80';
 
   return (
     <View style={[styles.inputContainer, style]}>
@@ -76,6 +74,7 @@ export function StyledInput({
               backgroundColor: Colors[colorScheme ?? 'light'].background,
               paddingHorizontal: 4,
               zIndex: 1,
+              pointerEvents: 'none', // Allow clicks to pass through to the input
             },
           ]}
         >
