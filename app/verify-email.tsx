@@ -1,5 +1,4 @@
 import { LoadingScreen } from '@/components/loading-screen';
-import { ScreenHeader } from '@/components/screen-header';
 import { StyledButton } from '@/components/styled-button';
 import { ThemedView } from '@/components/themed-view';
 import { createSharedStyles } from '@/constants/shared-styles';
@@ -8,8 +7,12 @@ import { apiService } from '@/services/api';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
-  Alert,
-  View
+    Alert,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    Text,
+    View
 } from 'react-native';
 
 export default function VerifyEmailScreen() {
@@ -17,28 +20,36 @@ export default function VerifyEmailScreen() {
   const [verifying, setVerifying] = useState(true);
   const [email, setEmail] = useState('');
   const [resending, setResending] = useState(false);
+  const [verificationSuccess, setVerificationSuccess] = useState(false);
+  const [verificationError, setVerificationError] = useState('');
+  const [hasAttemptedVerification, setHasAttemptedVerification] = useState(false);
   const colorScheme = useColorScheme();
   const { token } = useLocalSearchParams<{ token?: string }>();
 
   useEffect(() => {
-    if (token) {
+    // Only attempt verification once and only if we have a token
+    if (token && !hasAttemptedVerification) {
+      setHasAttemptedVerification(true);
       verifyEmail(token);
-    } else {
+    } else if (!token) {
       setVerifying(false);
     }
-  }, [token]);
+  }, [token, hasAttemptedVerification]);
 
   const verifyEmail = async (verificationToken: string) => {
+    // Prevent multiple verification attempts
+    if (loading || verificationSuccess || verificationError) {
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await apiService.verifyEmail(verificationToken);
       setEmail(response.email);
-      Alert.alert('Success', response.message, [
-        { text: 'OK', onPress: () => router.replace('/auth') }
-      ]);
+      setVerificationSuccess(true);
     } catch (error) {
       console.error('Verification error:', error);
-      Alert.alert('Error', error instanceof Error ? error.message : 'Verification failed');
+      setVerificationError(error instanceof Error ? error.message : 'Verification failed');
     } finally {
       setLoading(false);
       setVerifying(false);
@@ -63,38 +74,115 @@ export default function VerifyEmailScreen() {
     }
   };
 
+  const handleGoToLogin = () => {
+    router.replace('/auth');
+  };
+
   const styles = createSharedStyles(colorScheme as 'light' | 'dark' | null | undefined);
 
   if (verifying) {
     return <LoadingScreen message="Verifying your email..." />;
   }
 
+  // Show success message if verification was successful
+  if (verificationSuccess) {
+    return (
+      <ThemedView style={styles.container}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.container}
+        >
+          <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <View style={styles.form}>
+              <View style={styles.successContainer}>
+                <Text style={styles.successText}>
+                  Email Verified!
+                </Text>
+                <Text style={styles.successSubtext}>
+                  Your email is verified and your account is ready to go! Welcome to MyApp! Your account has been successfully verified. You can now log in and start using all the features.
+                </Text>
+              </View>
+
+              <StyledButton
+                title="Go to Login"
+                onPress={handleGoToLogin}
+              />
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </ThemedView>
+    );
+  }
+
+  // Show error message if verification failed
+  if (verificationError) {
+    return (
+      <ThemedView style={styles.container}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.container}
+        >
+          <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <View style={styles.form}>
+              <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>
+                  Verification Failed
+                </Text>
+                <Text style={styles.successSubtext}>
+                  There was an issue verifying your email: {verificationError}
+                </Text>
+              </View>
+
+              <StyledButton
+                title="Go to Login"
+                onPress={handleGoToLogin}
+              />
+
+              <StyledButton
+                title="Try Again"
+                onPress={() => router.replace('/forgot-password')}
+                variant="secondary"
+              />
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </ThemedView>
+    );
+  }
+
+  // Show pending verification message (when no token provided)
   return (
     <ThemedView style={styles.container}>
-      <View style={styles.content}>
-        <ScreenHeader
-          title="Verify Your Email"
-          subtitle="We've sent a verification link to your email address"
-          size="large"
-        />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
+      >
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.form}>
+            <View style={styles.successContainer}>
+              <Text style={styles.successText}>
+                Verify Your Email
+              </Text>
+              <Text style={styles.successSubtext}>
+                We've sent a verification link to your email address. Please check your inbox and click the link to verify your account.
+              </Text>
+            </View>
 
-        <View style={styles.form}>
-          <StyledButton
-            title="Go to Login"
-            onPress={() => router.replace('/auth')}
-            size="large"
-          />
+            <StyledButton
+              title="Go to Login"
+              onPress={handleGoToLogin}
+            />
 
-          <StyledButton
-            title="Resend Verification Email"
-            onPress={resendVerification}
-            variant="secondary"
-            size="large"
-            disabled={resending}
-            loading={resending}
-          />
-        </View>
-      </View>
+            <StyledButton
+              title="Resend Verification Email"
+              onPress={resendVerification}
+              variant="secondary"
+              disabled={resending}
+              loading={resending}
+            />
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </ThemedView>
   );
 }

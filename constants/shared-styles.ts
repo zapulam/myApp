@@ -303,5 +303,48 @@ export const createSharedStyles = (colorScheme: 'light' | 'dark' | null | undefi
       textAlign: 'center',
       marginBottom: 30,
     },
+
+    // Success styles
+    successContainer: {
+      backgroundColor: colorScheme === 'dark' ? '#1a3d1a' : '#e8f5e8',
+      borderRadius: 12,
+      padding: 20,
+      marginBottom: 30,
+      borderLeftWidth: 4,
+      borderLeftColor: '#4CAF50',
+    },
+    successText: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: colors.text,
+      marginBottom: 8,
+      textAlign: 'center',
+    },
+    successSubtext: {
+      fontSize: 14,
+      color: colors.text,
+      opacity: 0.8,
+      textAlign: 'center',
+      lineHeight: 20,
+    },
+    button: {
+      marginTop: 20,
+    },
+
+    // Error styles
+    errorContainer: {
+      backgroundColor: colorScheme === 'dark' ? '#3d1a1a' : '#f5e8e8',
+      borderRadius: 12,
+      padding: 20,
+      marginBottom: 30,
+      borderLeftWidth: 4,
+      borderLeftColor: '#ff4444',
+    },
+    errorText: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: colors.text,
+      textAlign: 'center',
+    },
   });
 };

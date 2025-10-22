@@ -1,7 +1,7 @@
 import os
 import uvicorn
 
-from datetime import timedelta
+from datetime import timedelta, datetime
 from dotenv import load_dotenv
 from fastapi import FastAPI, Depends, HTTPException, status, Header
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,8 +10,8 @@ from sqlalchemy.orm import Session
 from auth import verify_password, get_password_hash, create_access_token, verify_token
 from database import get_db, engine, SessionLocal
 from models import Base, User
-from schemas import UserCreate, UserResponse, UserLogin, Token, EmailVerificationRequest, EmailVerificationResponse, VerifyEmailRequest
-from email_service import generate_verification_token, send_verification_email_simple
+from schemas import UserCreate, UserResponse, UserLogin, Token, EmailVerificationRequest, EmailVerificationResponse, VerifyEmailRequest, ForgotPasswordRequest, ForgotPasswordResponse, ResetPasswordRequest, ResetPasswordResponse
+from email_service import generate_verification_token, send_verification_email, send_password_reset_email
 
 
 # Load environment variables
@@ -78,7 +78,7 @@ async def signup(user: UserCreate, db: Session = Depends(get_db_session)):
     
     # Send verification email
     try:
-        email_sent = await send_verification_email_simple(
+        email_sent = await send_verification_email(
             user.email, 
             user.name, 
             verification_token
@@ -217,7 +217,7 @@ async def resend_verification(request: EmailVerificationRequest, db: Session = D
     
     # Send verification email
     try:
-        email_sent = await send_verification_email_simple(
+        email_sent = await send_verification_email(
             user.email, 
             user.name, 
             verification_token
@@ -237,6 +237,85 @@ async def resend_verification(request: EmailVerificationRequest, db: Session = D
     return EmailVerificationResponse(
         message="Verification email sent successfully!",
         email=user.email
+    )
+
+
+@app.post("/auth/forgot-password", response_model=ForgotPasswordResponse)
+async def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(get_db_session)):
+    """Send password reset email"""
+    from models import User
+    
+    # Find user by email
+    user = db.query(User).filter(User.email == request.email).first()
+    
+    if not user:
+        # Don't reveal if user exists or not for security
+        return ForgotPasswordResponse(
+            message="If an account with that email exists, we've sent a password reset link.",
+            email=request.email
+        )
+    
+    if not user.is_verified:
+        # Don't reveal if user exists or not for security
+        return ForgotPasswordResponse(
+            message="If an account with that email exists, we've sent a password reset link.",
+            email=request.email
+        )
+    
+    # Generate password reset token
+    reset_token = generate_verification_token()
+    user.password_reset_token = reset_token
+    user.password_reset_expires = datetime.utcnow() + timedelta(hours=1)  # 1 hour expiry
+    db.commit()
+    
+    # Send password reset email
+    try:
+        email_sent = await send_password_reset_email(
+            user.email, 
+            user.name, 
+            reset_token
+        )
+        if not email_sent:
+            print(f"Warning: Failed to send password reset email to {user.email}")
+    except Exception as e:
+        print(f"Error sending password reset email: {e}")
+        # Don't fail the request if email sending fails
+    
+    return ForgotPasswordResponse(
+        message="If an account with that email exists, we've sent a password reset link.",
+        email=request.email
+    )
+
+
+@app.post("/auth/reset-password", response_model=ResetPasswordResponse)
+async def reset_password(request: ResetPasswordRequest, db: Session = Depends(get_db_session)):
+    """Reset user password with token"""
+    from models import User
+    
+    # Find user by reset token
+    user = db.query(User).filter(User.password_reset_token == request.token).first()
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired reset token"
+        )
+    
+    # Check if token is expired
+    if user.password_reset_expires and user.password_reset_expires < datetime.utcnow():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Reset token has expired"
+        )
+    
+    # Update password and clear reset token
+    user.hashed_password = get_password_hash(request.new_password)
+    user.password_reset_token = None
+    user.password_reset_expires = None
+    db.commit()
+    
+    return ResetPasswordResponse(
+        message="Password reset successfully! You can now log in with your new password."
     )
 
 

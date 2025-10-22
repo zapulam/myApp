@@ -7,6 +7,7 @@ import { createSharedStyles } from '@/constants/shared-styles';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { apiService } from '@/services/api';
 import { storageService } from '@/services/storage';
+import { validateLoginForm, validateSignupForm } from '@/utils/validation';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -29,6 +30,8 @@ export default function AuthScreen() {
   const [errorMessage, setErrorMessage] = useState('');
   const [showError, setShowError] = useState(false);
   const [passwordError, setPasswordError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [nameError, setNameError] = useState('');
   const colorScheme = useColorScheme();
 
   const showErrorAlert = (message: string) => {
@@ -40,12 +43,22 @@ export default function AuthScreen() {
     }, 5000);
   };
 
-  // Check if all required fields are filled
+  // Check if all required fields are filled and valid
   const isFormValid = () => {
     if (isLogin) {
-      return email.trim() !== '' && password.trim() !== '';
+      const validation = validateLoginForm(email, password);
+      return validation.isValid;
     } else {
-      return email.trim() !== '' && password.trim() !== '' && name.trim() !== '';
+      const validation = validateSignupForm(email, password, name);
+      return validation.isValid;
+    }
+  };
+
+  // Handle email change and clear error
+  const handleEmailChange = (text: string) => {
+    setEmail(text);
+    if (emailError) {
+      setEmailError('');
     }
   };
 
@@ -57,31 +70,57 @@ export default function AuthScreen() {
     }
   };
 
+  // Handle name change and clear error
+  const handleNameChange = (text: string) => {
+    setName(text);
+    if (nameError) {
+      setNameError('');
+    }
+  };
+
   const handleAuth = async () => {
     console.log('handleAuth called with:', { email, password, name, isLogin });
     
-    // Test validation with empty fields
-    if (!email || !password) {
-      console.log('Validation failed: missing email or password');
-      showErrorAlert('Please fill in all required fields');
-      return;
-    }
-
-    // Test password length validation
-    if (password.length < 8) {
-      console.log('Validation failed: password too short', password.length);
-      setPasswordError('Password must be at least 8 characters long');
-      return;
+    // Validate form using shared validation
+    if (isLogin) {
+      const validation = validateLoginForm(email, password);
+      if (!validation.isValid) {
+        console.log('Validation failed:', validation.errors);
+        
+        // Set individual field errors
+        if (validation.errors.email) {
+          setEmailError(validation.errors.email);
+        }
+        if (validation.errors.password) {
+          setPasswordError(validation.errors.password);
+        }
+        
+        return;
+      }
     } else {
-      setPasswordError(''); // Clear password error if valid
+      const validation = validateSignupForm(email, password, name);
+      if (!validation.isValid) {
+        console.log('Validation failed:', validation.errors);
+        
+        // Set individual field errors
+        if (validation.errors.email) {
+          setEmailError(validation.errors.email);
+        }
+        if (validation.errors.password) {
+          setPasswordError(validation.errors.password);
+        }
+        if (validation.errors.name) {
+          setNameError(validation.errors.name);
+        }
+        
+        return;
+      }
     }
 
-    // Test name validation for sign up
-    if (!isLogin && !name.trim()) {
-      console.log('Validation failed: missing name');
-      showErrorAlert('Please enter your name');
-      return;
-    }
+    // Clear all errors if validation passes
+    setEmailError('');
+    setPasswordError('');
+    setNameError('');
 
     console.log('All validations passed, proceeding with auth...');
 
@@ -132,6 +171,8 @@ export default function AuthScreen() {
     setName('');
     setShowPassword(false);
     setPasswordError('');
+    setEmailError('');
+    setNameError('');
   };
 
   const styles = createSharedStyles(colorScheme as 'light' | 'dark' | null | undefined);
@@ -153,18 +194,20 @@ export default function AuthScreen() {
               <StyledInput
                 label="Full Name"
                 value={name}
-                onChangeText={setName}
+                onChangeText={handleNameChange}
                 autoCapitalize="words"
+                error={nameError}
               />
             )}
 
             <StyledInput
               label="Email"
               value={email}
-              onChangeText={setEmail}
+              onChangeText={handleEmailChange}
               keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
+              error={emailError}
             />
 
             <StyledInput
@@ -181,6 +224,16 @@ export default function AuthScreen() {
               disabled={loading || !isFormValid()}
               loading={loading}
             />
+
+            {isLogin && (
+              <View style={styles.toggleContainer}>
+                <TouchableOpacity onPress={() => router.push('/forgot-password')}>
+                  <Text style={styles.toggleLink}>
+                    Forgot Password?
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
 
             <View style={styles.toggleContainer}>
               <Text style={styles.toggleText}>

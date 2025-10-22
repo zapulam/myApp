@@ -1,4 +1,3 @@
-import { ScreenHeader } from '@/components/screen-header';
 import { StyledButton } from '@/components/styled-button';
 import { ThemedView } from '@/components/themed-view';
 import { createSharedStyles } from '@/constants/shared-styles';
@@ -7,9 +6,12 @@ import { apiService } from '@/services/api';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
 import {
-  Alert,
-  Text,
-  View
+    Alert,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    Text,
+    View
 } from 'react-native';
 
 export default function VerificationPendingScreen() {
@@ -45,42 +47,44 @@ export default function VerificationPendingScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <View style={styles.content}>
-        <ScreenHeader
-          title="Check Your Email"
-          subtitle="We've sent a verification link to your email address. Please check your inbox and click the link to verify your account."
-          icon="📧"
-        />
-        {email && email.trim() && (
-          <Text style={styles.emailText}>{email}</Text>
-        )}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
+      >
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.form}>
+            <View style={styles.successContainer}>
+              <Text style={styles.successText}>
+                Check Your Email
+              </Text>
+              <Text style={styles.successSubtext}>
+                We've sent a verification link to {email || 'your email address'}. Please check your inbox and click the link to verify your account.
+              </Text>
+            </View>
 
-        <View style={styles.instructions}>
-          <Text style={styles.instructionTitle}>What's next?</Text>
-          <Text style={styles.instructionText}>
-            1. Check your email inbox (and spam folder){'\n'}
-            2. Click the verification link in the email{'\n'}
-            3. Return to the app and sign in
-          </Text>
-        </View>
+            <View style={styles.instructions}>
+              <Text style={styles.instructionTitle}>What's next?</Text>
+              <Text style={styles.instructionText}>
+                1. Check your email inbox (and spam folder){'\n'}
+                2. Click the verification link in the email{'\n'}
+                3. Return to the app and sign in
+              </Text>
+            </View>
 
-        <View style={styles.form}>
-          <StyledButton
-            title="Go to Sign In"
-            onPress={goToLogin}
-            size="large"
-          />
+            <StyledButton
+              title="Go to Sign In"
+              onPress={goToLogin}
+            />
 
-          <StyledButton
-            title="Resend Verification Email"
-            onPress={resendVerification}
-            variant="secondary"
-            size="large"
-            disabled={resending || !email}
-            loading={resending}
-          />
-        </View>
-      </View>
+            <StyledButton
+              title="Resend Verification Email"
+              onPress={resendVerification}
+              disabled={resending || !email}
+              loading={resending}
+            />
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </ThemedView>
   );
 }

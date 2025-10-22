@@ -38,6 +38,24 @@ export interface ResendVerificationData {
   email: string;
 }
 
+export interface ForgotPasswordData {
+  email: string;
+}
+
+export interface ForgotPasswordResponse {
+  message: string;
+  email: string;
+}
+
+export interface ResetPasswordData {
+  token: string;
+  new_password: string;
+}
+
+export interface ResetPasswordResponse {
+  message: string;
+}
+
 class ApiService {
   private baseUrl: string;
 
@@ -128,6 +146,20 @@ class ApiService {
     return this.request<EmailVerificationResponse>('/auth/resend-verification', {
       method: 'POST',
       body: JSON.stringify({ email }),
+    });
+  }
+
+  async forgotPassword(email: string): Promise<ForgotPasswordResponse> {
+    return this.request<ForgotPasswordResponse>('/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    });
+  }
+
+  async resetPassword(token: string, newPassword: string): Promise<ResetPasswordResponse> {
+    return this.request<ResetPasswordResponse>('/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify({ token, new_password: newPassword }),
     });
   }
 }

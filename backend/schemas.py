@@ -14,6 +14,8 @@ class UserCreate(UserBase):
     @field_validator('password')
     @classmethod
     def validate_password(cls, v):
+        if len(v) < 8:
+            raise ValueError('Password must be at least 8 characters long')
         # Truncate password to 72 bytes for bcrypt compatibility
         if len(v.encode('utf-8')) > 72:
             return v[:72]
@@ -55,3 +57,31 @@ class EmailVerificationResponse(BaseModel):
 
 class VerifyEmailRequest(BaseModel):
     token: str
+
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+
+class ForgotPasswordResponse(BaseModel):
+    message: str
+    email: str
+
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str
+    
+    @field_validator('new_password')
+    @classmethod
+    def validate_password(cls, v):
+        if len(v) < 8:
+            raise ValueError('Password must be at least 8 characters long')
+        # Truncate password to 72 bytes for bcrypt compatibility
+        if len(v.encode('utf-8')) > 72:
+            return v[:72]
+        return v
+
+
+class ResetPasswordResponse(BaseModel):
+    message: str

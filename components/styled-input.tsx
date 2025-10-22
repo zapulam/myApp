@@ -89,8 +89,6 @@ export function StyledInput({
           <View style={styles.passwordContainer}>
             <TextInput
               style={size === 'large' ? styles.largeInput : styles.input}
-              placeholder={!isFloating ? placeholder : ''} // Only show placeholder when label is not floating
-              placeholderTextColor={Colors[colorScheme ?? 'light'].text + '80'}
               value={value}
               onChangeText={onChangeText}
               onFocus={() => setIsFocused(true)}
@@ -114,8 +112,6 @@ export function StyledInput({
         ) : (
           <TextInput
             style={size === 'large' ? styles.largeInput : styles.input}
-            placeholder={!isFloating ? placeholder : ''} // Only show placeholder when label is not floating
-            placeholderTextColor={Colors[colorScheme ?? 'light'].text + '80'}
             value={value}
             onChangeText={onChangeText}
             onFocus={() => setIsFocused(true)}
