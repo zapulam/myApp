@@ -90,14 +90,14 @@ def create_verification_email_html(user_name: str, verification_url: str) -> str
             .welcome-note {{
                 background-color: #e8f5e8;
                 border-left: 4px solid #4CAF50;
-                padding: 15px;
+                padding: 16px;
                 margin: 20px 0;
                 border-radius: 4px;
             }}
             .security-note {{
                 background-color: #fff3cd;
                 border-left: 4px solid #ffc107;
-                padding: 15px;
+                padding: 16px;
                 margin: 20px 0;
                 border-radius: 4px;
             }}
@@ -209,7 +209,7 @@ def create_password_reset_email_html(user_name: str, reset_url: str) -> str:
             .security-note {{
                 background-color: #fff3cd;
                 border-left: 4px solid #ffc107;
-                padding: 15px;
+                padding: 16px;
                 margin: 20px 0;
                 border-radius: 4px;
             }}

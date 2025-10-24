@@ -1,4 +1,3 @@
-import { ErrorDisplay } from '@/components/error-display';
 import { ScreenHeader } from '@/components/screen-header';
 import { StyledButton } from '@/components/styled-button';
 import { StyledInput } from '@/components/styled-input';
@@ -11,7 +10,6 @@ import { validateLoginForm, validateSignupForm } from '@/utils/validation';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -37,10 +35,6 @@ export default function AuthScreen() {
   const showErrorAlert = (message: string) => {
     setErrorMessage(message);
     setShowError(true);
-    // Auto-hide after 5 seconds
-    setTimeout(() => {
-      setShowError(false);
-    }, 5000);
   };
 
   // Check if all required fields are filled and valid
@@ -60,6 +54,10 @@ export default function AuthScreen() {
     if (emailError) {
       setEmailError('');
     }
+    // Clear general error message when user starts typing
+    if (showError) {
+      setShowError(false);
+    }
   };
 
   // Handle password change and clear error
@@ -68,6 +66,10 @@ export default function AuthScreen() {
     if (passwordError) {
       setPasswordError('');
     }
+    // Clear general error message when user starts typing
+    if (showError) {
+      setShowError(false);
+    }
   };
 
   // Handle name change and clear error
@@ -75,6 +77,10 @@ export default function AuthScreen() {
     setName(text);
     if (nameError) {
       setNameError('');
+    }
+    // Clear general error message when user starts typing
+    if (showError) {
+      setShowError(false);
     }
   };
 
@@ -158,7 +164,24 @@ export default function AuthScreen() {
       }
     } catch (error) {
       console.error('Auth error:', error);
-      Alert.alert('Error', error instanceof Error ? error.message : 'Something went wrong');
+      
+      // Handle specific error cases for login
+      if (isLogin && error instanceof Error) {
+        const errorMsg = error.message;
+        
+        if (errorMsg.includes('Incorrect email or password')) {
+          showErrorAlert('Invalid email or password. Please check your credentials and try again.');
+        } else if (errorMsg.includes('Inactive user')) {
+          showErrorAlert('Your account has been deactivated. Please contact support.');
+        } else if (errorMsg.includes('Email not verified')) {
+          showErrorAlert('Please verify your email address before logging in. Check your inbox for a verification link.');
+        } else {
+          showErrorAlert(errorMsg);
+        }
+      } else {
+        // For signup errors or other cases, use the generic error message
+        showErrorAlert(error instanceof Error ? error.message : 'Something went wrong');
+      }
     } finally {
       setLoading(false);
     }
@@ -189,15 +212,20 @@ export default function AuthScreen() {
             subtitle={isLogin ? 'Sign in to your account' : 'Sign up to get started'}
           />
 
+          {showError && (
+            <View style={styles.errorMessageContainer}>
+              <Text style={styles.errorMessageText}>{errorMessage}</Text>
+            </View>
+          )}
+
           <View style={styles.form}>
             {!isLogin && (
-              <StyledInput
-                label="Full Name"
-                value={name}
-                onChangeText={handleNameChange}
-                autoCapitalize="words"
-                error={nameError}
-              />
+            <StyledInput
+              label="Full Name"
+              value={name}
+              onChangeText={handleNameChange}
+              autoCapitalize="words"
+            />
             )}
 
             <StyledInput
@@ -207,7 +235,6 @@ export default function AuthScreen() {
               keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
-              error={emailError}
             />
 
             <StyledInput
@@ -215,7 +242,6 @@ export default function AuthScreen() {
               value={password}
               onChangeText={handlePasswordChange}
               secureTextEntry={true}
-              error={passwordError}
             />
 
             <StyledButton
@@ -248,12 +274,6 @@ export default function AuthScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-      
-      <ErrorDisplay
-        message={errorMessage}
-        visible={showError}
-        onClose={() => setShowError(false)}
-      />
     </ThemedView>
   );
 }

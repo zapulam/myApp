@@ -1,5 +1,4 @@
-import { ScreenHeader } from '@/components/screen-header';
-import { StyledButton } from '@/components/styled-button';
+import { NavigationHeader } from '@/components/navigation-header';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { createSharedStyles } from '@/constants/shared-styles';
@@ -44,22 +43,19 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <ScreenHeader
-        title="Welcome to MyApp!"
-        subtitle="You have successfully authenticated"
-        withTopMargin={true}
+      <NavigationHeader 
+        title="MyApp"
+        showProfileButton={true}
+        onLogout={handleLogout}
       />
 
-      <View style={styles.centeredContent}>
-        <ThemedText style={styles.welcomeText}>
-          🎉 Welcome back, {user?.name || 'User'}! You're now logged in.
-        </ThemedText>
-        
-        <StyledButton
-          title="Logout"
-          onPress={handleLogout}
-          variant="danger"
-        />
+      <View style={styles.dashboardContainer}>
+        <View style={styles.dashboardContent}>
+          <ThemedText style={styles.dashboardTitle}>Dashboard</ThemedText>
+          <ThemedText style={styles.dashboardSubtitle}>
+            Welcome to your dashboard. Content will be added here.
+          </ThemedText>
+        </View>
       </View>
     </ThemedView>
   );

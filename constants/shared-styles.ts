@@ -331,19 +331,233 @@ export const createSharedStyles = (colorScheme: 'light' | 'dark' | null | undefi
       marginTop: 20,
     },
 
-    // Error styles
-    errorContainer: {
-      backgroundColor: colorScheme === 'dark' ? '#3d1a1a' : '#f5e8e8',
-      borderRadius: 12,
-      padding: 20,
-      marginBottom: 30,
-      borderLeftWidth: 4,
-      borderLeftColor: '#ff4444',
+
+    // Navigation styles
+    navigationHeader: {
+      backgroundColor: colors.background,
+      borderBottomWidth: 1,
+      borderBottomColor: colorScheme === 'dark' ? '#333' : '#e0e0e0',
+      paddingTop: 10,
+      paddingBottom: 10,
     },
-    errorText: {
+    navigationHeaderContent: {
+      maxWidth: 1200,
+      alignSelf: 'center',
+      width: '100%',
+      paddingHorizontal: 20,
+    },
+    navigationContent: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    navigationTitle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: colors.text,
+    },
+    navigationActions: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 16,
+    },
+    navigationItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      borderRadius: 8,
+      backgroundColor: colorScheme === 'dark' ? '#2a2a2a' : '#f5f5f5',
+    },
+    navigationIcon: {
       fontSize: 16,
+      marginRight: 6,
+    },
+    navigationItemText: {
+      fontSize: 14,
+      color: colors.text,
+      fontWeight: '500',
+    },
+    profileButton: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: colors.tint,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    profileIcon: {
+      fontSize: 20,
+    },
+
+    // Profile styles
+    profileContainer: {
+      flex: 1,
+      padding: 20,
+      maxWidth: 1200,
+      alignSelf: 'center',
+      width: '100%',
+    },
+    profileInfo: {
+      backgroundColor: colorScheme === 'dark' ? '#1a1a1a' : '#f8f9fa',
+      borderRadius: 12,
+      padding: 16,
+      marginBottom: 16,
+    },
+    profileField: {
+      marginBottom: 16,
+    },
+    profileLabel: {
+      fontSize: 14,
       fontWeight: '600',
       color: colors.text,
+      opacity: 0.7,
+      marginBottom: 8,
+    },
+    profileValue: {
+      fontSize: 16,
+      color: colors.text,
+      fontWeight: '500',
+    },
+    verifiedText: {
+      color: '#4CAF50',
+    },
+    unverifiedText: {
+      color: '#ff4444',
+    },
+    profileActions: {
+      gap: 16,
+    },
+    editButton: {
+      position: 'absolute',
+      top: 16,
+      right: 16,
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      backgroundColor: colorScheme === 'dark' ? '#2a2a2a' : '#f0f0f0',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 1,
+    },
+
+    // Home page styles
+    welcomeSection: {
+      alignItems: 'center',
+      marginBottom: 30,
+      paddingHorizontal: 20,
+    },
+    welcomeTitle: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: colors.text,
+      textAlign: 'center',
+      marginBottom: 10,
+    },
+    welcomeSubtitle: {
+      fontSize: 16,
+      color: colors.text,
+      opacity: 0.7,
+      textAlign: 'center',
+      lineHeight: 22,
+    },
+    quickActions: {
+      paddingHorizontal: 20,
+    },
+    sectionTitle: {
+      fontSize: 18,
+      fontWeight: '600',
+      color: colors.text,
+      marginBottom: 20,
+    },
+
+    // Profile dropdown styles
+    dropdownOverlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      paddingTop: 70,
+    },
+    dropdownWrapper: {
+      maxWidth: 1200,
+      width: '100%',
+      paddingHorizontal: 20,
+      alignItems: 'flex-end',
+    },
+    dropdownContainer: {
+      backgroundColor: colors.background,
+      borderRadius: 12,
+      paddingVertical: 8,
+      minWidth: 160,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
+    },
+    dropdownItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      gap: 12,
+    },
+    dropdownText: {
+      fontSize: 16,
+      color: colors.text,
+      fontWeight: '500',
+    },
+    logoutText: {
+      color: '#ff4444',
+    },
+    dropdownDivider: {
+      height: 1,
+      backgroundColor: colorScheme === 'dark' ? '#333' : '#e0e0e0',
+      marginVertical: 4,
+    },
+
+    // Dashboard styles
+    dashboardContainer: {
+      flex: 1,
+      padding: 20,
+      maxWidth: 1200,
+      alignSelf: 'center',
+      width: '100%',
+    },
+    dashboardContent: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    dashboardTitle: {
+      fontSize: 28,
+      fontWeight: 'bold',
+      color: colors.text,
+      marginBottom: 12,
+    },
+    dashboardSubtitle: {
+      fontSize: 16,
+      color: colors.text,
+      opacity: 0.7,
+      textAlign: 'center',
+      lineHeight: 22,
+    },
+
+    // Auth error message styles
+    errorMessageContainer: {
+      marginHorizontal: 20,
+      marginBottom: 20,
+      maxWidth: 400,
+      alignSelf: 'center',
+    },
+    errorMessageText: {
+      fontSize: 14,
+      color: '#ff4444',
+      fontWeight: '500',
       textAlign: 'center',
     },
   });

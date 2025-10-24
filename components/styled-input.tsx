@@ -83,8 +83,6 @@ export function StyledInput({
           {label}
         </Animated.Text>
         
-        {error && <Text style={styles.passwordErrorText}>{error}</Text>}
-        
         {isPassword ? (
           <View style={styles.passwordContainer}>
             <TextInput
@@ -121,6 +119,8 @@ export function StyledInput({
             autoCorrect={autoCorrect}
           />
         )}
+        
+        {error && <Text style={styles.passwordErrorText}>{error}</Text>}
       </View>
     </View>
   );
