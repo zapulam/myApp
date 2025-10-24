@@ -64,7 +64,7 @@ export function StyledInput({
     <View style={[styles.inputContainer, style]}>
       <View style={{ position: 'relative' }}>
         <Animated.Text
-          style={[
+          style={
             {
               position: 'absolute',
               top: labelTop,
@@ -77,8 +77,8 @@ export function StyledInput({
               borderRadius: 4,
               zIndex: 1,
               pointerEvents: 'none', // Allow clicks to pass through to the input
-            },
-          ]}
+            }
+          }
         >
           {label}
         </Animated.Text>
