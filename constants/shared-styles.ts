@@ -1,4 +1,4 @@
-import { Colors } from '@/constants/theme';
+import { Colors, Fonts } from '@/constants/theme';
 import { StyleSheet } from 'react-native';
 
 export const createSharedStyles = () => {
@@ -121,6 +121,7 @@ export const createSharedStyles = () => {
     largeTitle: {
       fontSize: 32,
       fontWeight: 'bold',
+      fontFamily: Fonts.bold,
       color: colors.text,
       textAlign: 'center',
       marginBottom: 8,
@@ -128,6 +129,7 @@ export const createSharedStyles = () => {
     authTitle: {
       fontSize: 30,
       fontWeight: '700',
+      fontFamily: Fonts.bold,
       color: colors.text,
       textAlign: 'center',
       marginBottom: 6,
@@ -135,6 +137,7 @@ export const createSharedStyles = () => {
     },
     subtitle: {
       fontSize: 16,
+      fontFamily: Fonts.regular,
       color: colors.text,
       opacity: 0.7,
       textAlign: 'center',

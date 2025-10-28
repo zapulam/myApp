@@ -1,6 +1,7 @@
+import { Text } from '@/components/themed-text';
 import { createSharedStyles } from '@/constants/shared-styles';
 import React from 'react';
-import { ActivityIndicator, Text, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, TouchableOpacity } from 'react-native';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'danger';
 export type ButtonSize = 'default' | 'large';
@@ -54,7 +55,11 @@ export function StyledButton({
         return styles.dangerButtonText;
       default:
         // Always use white text with medium weight for primary buttons
-        return { color: 'white', fontSize: 16, fontWeight: '500' as const };
+        return { 
+          color: 'white', 
+          fontSize: 16, 
+          fontWeight: '500' as const
+        };
     }
   };
 

@@ -1,6 +1,7 @@
 import { GradientBackground } from '@/components/gradient-background';
 import { StyledButton } from '@/components/styled-button';
 import { StyledInput } from '@/components/styled-input';
+import { Text } from '@/components/themed-text';
 import { createSharedStyles } from '@/constants/shared-styles';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { apiService } from '@/services/api';
@@ -13,7 +14,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Text,
   TouchableOpacity,
   View
 } from 'react-native';
@@ -298,16 +298,6 @@ export default function AuthScreen() {
                   />
                 </View>
 
-                {isLogin && (
-                  <View style={{ alignItems: 'center', marginTop: 4, marginBottom: 16 }}>
-                    <TouchableOpacity onPress={() => router.push('/forgot-password')}>
-                      <Text style={styles.toggleLink}>
-                        Forgot Password?
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-
                 <StyledButton
                   title={isLogin ? 'Sign In' : 'Create Account'}
                   onPress={handleAuth}
@@ -315,6 +305,16 @@ export default function AuthScreen() {
                   loading={loading}
                   style={styles.authButton}
                 />
+
+                {isLogin && (
+                  <View style={styles.authToggleContainer}>
+                    <TouchableOpacity onPress={() => router.push('/forgot-password')}>
+                      <Text style={styles.toggleLink}>
+                        Forgot Password?
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
               </View>
             </BlurView>
           </ScrollView>

@@ -1,8 +1,9 @@
+import { Text } from '@/components/themed-text';
 import { createSharedStyles } from '@/constants/shared-styles';
-import { Colors } from '@/constants/theme';
+import { Colors, Fonts } from '@/constants/theme';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { Animated, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Animated, TextInput, TouchableOpacity, View } from 'react-native';
 
 export interface StyledInputProps {
   label: string;
@@ -50,7 +51,7 @@ export function StyledInput({
 
   const labelTop = labelAnimation.interpolate({
     inputRange: [0, 1],
-    outputRange: [size === 'large' ? 18 : 14, -2],
+    outputRange: [size === 'large' ? 18 : 14, 0],
   });
 
   const labelScale = labelAnimation.interpolate({
@@ -63,8 +64,8 @@ export function StyledInput({
 
   const inputStyle = [
     size === 'large' ? styles.largeInput : styles.input,
-    // Remove default browser outline
-    { outline: 'none' } as any,
+    // Remove default browser outline and ensure font is applied
+    { outline: 'none', fontFamily: Fonts.regular } as any,
   ];
 
   return (
@@ -77,6 +78,7 @@ export function StyledInput({
               top: labelTop,
               left: size === 'large' ? 16 : 12,
               fontSize: size === 'large' ? 16 : 14,
+              fontFamily: Fonts.regular,
               color: labelColor,
               backgroundColor: 'transparent',
               paddingHorizontal: 4,

@@ -1,5 +1,5 @@
 /**
- * App theme colors (dark mode only)
+ * App theme colors and fonts (dark mode only)
  */
 
 export const Colors = {
@@ -15,4 +15,16 @@ export const Colors = {
   inputGlass: 'rgba(255, 255, 255, 0.05)',
   accent: '#ff6b35', // Orange
   accentSecondary: '#00d9ff', // Cyan
+};
+
+/**
+ * App fonts
+ * Using Consolas (monospace font available on Windows)
+ * Note: On iOS/Android, this will fall back to system monospace font
+ * For cross-platform consistency, add Consolas.ttf to assets/fonts/
+ */
+export const Fonts = {
+  regular: 'Consolas',
+  medium: 'Consolas',
+  bold: 'Consolas',
 };
