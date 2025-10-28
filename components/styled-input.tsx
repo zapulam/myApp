@@ -1,6 +1,5 @@
 import { createSharedStyles } from '@/constants/shared-styles';
 import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Animated, Text, TextInput, TouchableOpacity, View } from 'react-native';
@@ -32,8 +31,7 @@ export function StyledInput({
   error,
   style,
 }: StyledInputProps) {
-  const colorScheme = useColorScheme();
-  const styles = createSharedStyles(colorScheme);
+  const styles = createSharedStyles();
   const [showPassword, setShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [labelAnimation] = useState(new Animated.Value(value ? 1 : 0));
@@ -52,13 +50,22 @@ export function StyledInput({
 
   const labelTop = labelAnimation.interpolate({
     inputRange: [0, 1],
-    outputRange: [size === 'large' ? 18 : 14, -12],
+    outputRange: [size === 'large' ? 18 : 14, -2],
   });
 
-  // Removed labelScale to keep text size consistent
+  const labelScale = labelAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 0.75],
+  });
 
   // Keep label color consistent (grey) instead of changing to theme tint
-  const labelColor = Colors[colorScheme ?? 'light'].text + '80';
+  const labelColor = Colors.text + '80';
+
+  const inputStyle = [
+    size === 'large' ? styles.largeInput : styles.input,
+    // Remove default browser outline
+    { outline: 'none' } as any,
+  ];
 
   return (
     <View style={[styles.inputContainer, style]}>
@@ -69,14 +76,16 @@ export function StyledInput({
               position: 'absolute',
               top: labelTop,
               left: size === 'large' ? 16 : 12,
-              fontSize: size === 'large' ? 16 : 14, // Keep consistent font size
+              fontSize: size === 'large' ? 16 : 14,
               color: labelColor,
-              backgroundColor: Colors[colorScheme ?? 'light'].background,
+              backgroundColor: 'transparent',
               paddingHorizontal: 4,
               paddingVertical: 2,
               borderRadius: 4,
               zIndex: 1,
               pointerEvents: 'none', // Allow clicks to pass through to the input
+              transform: [{ scale: labelScale }],
+              transformOrigin: 'left center',
             }
           }
         >
@@ -86,7 +95,7 @@ export function StyledInput({
         {isPassword ? (
           <View style={styles.passwordContainer}>
             <TextInput
-              style={size === 'large' ? styles.largeInput : styles.input}
+              style={inputStyle}
               value={value}
               onChangeText={onChangeText}
               onFocus={() => setIsFocused(true)}
@@ -95,21 +104,22 @@ export function StyledInput({
               keyboardType={keyboardType}
               autoCapitalize={autoCapitalize}
               autoCorrect={autoCorrect}
+              placeholderTextColor={Colors.text + '40'}
             />
             <TouchableOpacity
               style={styles.toggleButton}
               onPress={() => setShowPassword(!showPassword)}
             >
               <Ionicons
-                name={showPassword ? 'lock-open' : 'lock-closed'}
-                size={20}
-                color={Colors[colorScheme ?? 'light'].tint}
+                name={showPassword ? 'lock-open-outline' : 'lock-closed-outline'}
+                size={22}
+                color={Colors.text + '80'}
               />
             </TouchableOpacity>
           </View>
         ) : (
           <TextInput
-            style={size === 'large' ? styles.largeInput : styles.input}
+            style={inputStyle}
             value={value}
             onChangeText={onChangeText}
             onFocus={() => setIsFocused(true)}
@@ -117,6 +127,7 @@ export function StyledInput({
             keyboardType={keyboardType}
             autoCapitalize={autoCapitalize}
             autoCorrect={autoCorrect}
+            placeholderTextColor={Colors.text + '40'}
           />
         )}
         

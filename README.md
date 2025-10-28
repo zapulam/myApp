@@ -62,7 +62,7 @@ python main.py
 
 **Terminal 2 - Frontend:**
 ```bash
-npm start
+npx expo start
 ```
 
 ## 🔧 Environment Configuration

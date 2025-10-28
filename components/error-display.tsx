@@ -1,5 +1,4 @@
 import { createSharedStyles } from '@/constants/shared-styles';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
@@ -10,8 +9,7 @@ export interface ErrorDisplayProps {
 }
 
 export function ErrorDisplay({ message, visible, onClose }: ErrorDisplayProps) {
-  const colorScheme = useColorScheme();
-  const styles = createSharedStyles(colorScheme);
+  const styles = createSharedStyles();
 
   if (!visible) return null;
 

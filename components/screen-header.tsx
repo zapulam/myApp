@@ -1,5 +1,4 @@
 import { createSharedStyles } from '@/constants/shared-styles';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import React from 'react';
 import { Text, View } from 'react-native';
 
@@ -20,8 +19,7 @@ export function ScreenHeader({
   withTopMargin = false,
   style,
 }: ScreenHeaderProps) {
-  const colorScheme = useColorScheme();
-  const styles = createSharedStyles(colorScheme);
+  const styles = createSharedStyles();
 
   return (
     <View style={[

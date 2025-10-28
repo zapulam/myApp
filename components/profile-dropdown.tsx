@@ -1,5 +1,4 @@
 import { createSharedStyles } from '@/constants/shared-styles';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
@@ -13,8 +12,7 @@ export interface ProfileDropdownProps {
 
 export function ProfileDropdown({ onLogout }: ProfileDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const colorScheme = useColorScheme();
-  const styles = createSharedStyles(colorScheme);
+  const styles = createSharedStyles();
 
   const handleSettings = () => {
     setIsOpen(false);
@@ -40,7 +38,7 @@ export function ProfileDropdown({ onLogout }: ProfileDropdownProps) {
         <Ionicons 
           name="person" 
           size={20} 
-          color={colorScheme === 'dark' ? '#ECEDEE' : '#11181C'} 
+          color="#ECEDEE" 
         />
       </TouchableOpacity>
 
@@ -64,7 +62,7 @@ export function ProfileDropdown({ onLogout }: ProfileDropdownProps) {
               <Ionicons 
                 name="person" 
                 size={16} 
-                color={colorScheme === 'dark' ? '#ECEDEE' : '#11181C'} 
+                color="#ECEDEE" 
               />
               <ThemedText style={styles.dropdownText}>Profile</ThemedText>
             </TouchableOpacity>
@@ -76,7 +74,7 @@ export function ProfileDropdown({ onLogout }: ProfileDropdownProps) {
               <Ionicons 
                 name="settings" 
                 size={16} 
-                color={colorScheme === 'dark' ? '#ECEDEE' : '#11181C'} 
+                color="#ECEDEE" 
               />
               <ThemedText style={styles.dropdownText}>Settings</ThemedText>
             </TouchableOpacity>

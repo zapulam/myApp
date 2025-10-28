@@ -1,8 +1,8 @@
 import { Colors } from '@/constants/theme';
 import { StyleSheet } from 'react-native';
 
-export const createSharedStyles = (colorScheme: 'light' | 'dark' | null | undefined) => {
-  const colors = Colors[colorScheme ?? 'light'];
+export const createSharedStyles = () => {
+  const colors = Colors;
   
   return StyleSheet.create({
     // Container styles
@@ -14,6 +14,35 @@ export const createSharedStyles = (colorScheme: 'light' | 'dark' | null | undefi
       flexGrow: 1,
       justifyContent: 'center',
       padding: 16,
+    },
+    // Glass morphism auth container
+    authGradientContainer: {
+      flex: 1,
+      overflow: 'hidden',
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+    },
+    authScrollContainer: {
+      flexGrow: 1,
+      justifyContent: 'center',
+      paddingHorizontal: 20,
+      paddingVertical: 20,
+    },
+    glassCard: {
+      backgroundColor: 'rgba(21, 23, 24, 0.7)',
+      borderRadius: 24,
+      padding: 32,
+      marginHorizontal: 16,
+      maxWidth: 400,
+      alignSelf: 'center',
+      width: '100%',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 10 },
+      shadowOpacity: 0.5,
+      shadowRadius: 30,
+      elevation: 10,
+      borderWidth: 1,
+      borderColor: 'rgba(255, 255, 255, 0.1)',
     },
     content: {
       flex: 1,
@@ -29,12 +58,58 @@ export const createSharedStyles = (colorScheme: 'light' | 'dark' | null | undefi
     // Header styles
     header: {
       alignItems: 'center',
-      marginBottom: 40,
+      marginBottom: 32,
     },
     headerWithTopMargin: {
       alignItems: 'center',
       marginTop: 60,
       marginBottom: 40,
+    },
+    authHeader: {
+      alignItems: 'center',
+      marginBottom: 20,
+    },
+    authIconContainer: {
+      width: 70,
+      height: 70,
+      borderRadius: 35,
+      backgroundColor: '#c026d3',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 20,
+      shadowColor: '#c026d3',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.5,
+      shadowRadius: 12,
+      elevation: 8,
+    },
+    // Tab switcher styles
+    tabContainer: {
+      flexDirection: 'row',
+      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+      borderRadius: 12,
+      padding: 4,
+      marginBottom: 20,
+      width: '100%',
+    },
+    tab: {
+      flex: 1,
+      paddingVertical: 12,
+      alignItems: 'center',
+      borderRadius: 10,
+    },
+    activeTab: {
+      backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    },
+    tabText: {
+      fontSize: 15,
+      fontWeight: '600',
+      color: colors.text,
+      opacity: 0.5,
+    },
+    activeTabText: {
+      opacity: 1,
+      color: colors.text,
     },
     title: {
       fontSize: 28,
@@ -50,6 +125,14 @@ export const createSharedStyles = (colorScheme: 'light' | 'dark' | null | undefi
       textAlign: 'center',
       marginBottom: 8,
     },
+    authTitle: {
+      fontSize: 30,
+      fontWeight: '700',
+      color: colors.text,
+      textAlign: 'center',
+      marginBottom: 6,
+      letterSpacing: -0.5,
+    },
     subtitle: {
       fontSize: 16,
       color: colors.text,
@@ -62,6 +145,12 @@ export const createSharedStyles = (colorScheme: 'light' | 'dark' | null | undefi
       opacity: 0.7,
       textAlign: 'center',
     },
+    authSubtitle: {
+      fontSize: 15,
+      color: colors.text,
+      opacity: 0.6,
+      textAlign: 'center',
+    },
 
     // Form styles
     form: {
@@ -69,7 +158,13 @@ export const createSharedStyles = (colorScheme: 'light' | 'dark' | null | undefi
       maxWidth: 400,
       alignSelf: 'center',
     },
+    authForm: {
+      width: '100%',
+    },
     inputContainer: {
+      marginBottom: 0,
+    },
+    authInputContainer: {
       marginBottom: 16,
     },
     label: {
@@ -85,35 +180,45 @@ export const createSharedStyles = (colorScheme: 'light' | 'dark' | null | undefi
       color: colors.text,
     },
     input: {
-      borderWidth: 1,
-      borderColor: colorScheme === 'dark' ? '#333' : '#ddd',
-      borderRadius: 10,
-      paddingHorizontal: 12,
-      paddingVertical: 10,
+      borderWidth: 1.5,
+      borderColor: 'rgba(255, 255, 255, 0.1)',
+      borderRadius: 12,
+      paddingHorizontal: 14,
+      paddingVertical: 12,
       paddingTop: 20, // Consistent top padding for floating labels
-      fontSize: 14,
-      backgroundColor: colors.background,
+      fontSize: 15,
+      backgroundColor: 'rgba(255, 255, 255, 0.05)',
       color: colors.text,
-      minHeight: 50, // Ensure consistent height
+      minHeight: 54,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.4,
+      shadowRadius: 4,
+      elevation: 2,
     },
     largeInput: {
-      borderWidth: 1,
-      borderColor: colorScheme === 'dark' ? '#333' : '#ddd',
-      borderRadius: 12,
+      borderWidth: 1.5,
+      borderColor: 'rgba(255, 255, 255, 0.1)',
+      borderRadius: 14,
       paddingHorizontal: 16,
       paddingVertical: 14,
-      paddingTop: 20, // Consistent top padding for floating labels
+      paddingTop: 22, // Consistent top padding for floating labels
       fontSize: 16,
-      backgroundColor: colors.background,
+      backgroundColor: 'rgba(255, 255, 255, 0.05)',
       color: colors.text,
-      minHeight: 56, // Ensure consistent height
+      minHeight: 60,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.4,
+      shadowRadius: 4,
+      elevation: 2,
     },
     passwordContainer: {
       position: 'relative',
     },
     passwordInput: {
       borderWidth: 1,
-      borderColor: colorScheme === 'dark' ? '#333' : '#ddd',
+      borderColor: '#333',
       borderRadius: 10,
       paddingHorizontal: 12,
       paddingVertical: 10,
@@ -137,31 +242,56 @@ export const createSharedStyles = (colorScheme: 'light' | 'dark' | null | undefi
     // Button styles
     primaryButton: {
       backgroundColor: colors.tint,
-      borderRadius: 10,
-      paddingVertical: 12,
+      borderRadius: 12,
+      paddingVertical: 14,
       alignItems: 'center',
       marginTop: 8,
+      shadowColor: colors.tint,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+      elevation: 4,
+    },
+    authButton: {
+      backgroundColor: colors.tint,
+      borderRadius: 12,
+      paddingVertical: 14,
+      alignItems: 'center',
+      marginTop: 4,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 4,
+      elevation: 3,
     },
     primaryButtonLarge: {
       backgroundColor: colors.tint,
-      borderRadius: 12,
-      paddingVertical: 16,
+      borderRadius: 14,
+      paddingVertical: 18,
       alignItems: 'center',
       marginTop: 20,
+      shadowColor: colors.tint,
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.35,
+      shadowRadius: 12,
+      elevation: 6,
     },
     primaryButtonDisabled: {
-      backgroundColor: colorScheme === 'dark' ? '#555' : '#ccc',
-      opacity: 0.6,
+      backgroundColor: '#3a3a3a',
+      opacity: 0.7,
+      shadowOpacity: 0.1,
     },
     primaryButtonText: {
-      color: colorScheme === 'dark' ? '#000' : 'white',
+      color: '#000',
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: '700',
+      letterSpacing: 0.3,
     },
     primaryButtonTextLarge: {
-      color: colorScheme === 'dark' ? '#000' : 'white',
-      fontSize: 18,
-      fontWeight: '600',
+      color: '#000',
+      fontSize: 17,
+      fontWeight: '700',
+      letterSpacing: 0.5,
     },
     secondaryButton: {
       backgroundColor: 'transparent',
@@ -195,6 +325,12 @@ export const createSharedStyles = (colorScheme: 'light' | 'dark' | null | undefi
       justifyContent: 'center',
       alignItems: 'center',
       marginTop: 20,
+    },
+    authToggleContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 16,
     },
     toggleText: {
       fontSize: 14,
@@ -265,7 +401,7 @@ export const createSharedStyles = (colorScheme: 'light' | 'dark' | null | undefi
 
     // Instruction/Info styles
     instructions: {
-      backgroundColor: colorScheme === 'dark' ? '#1a1a1a' : '#f5f5f5',
+      backgroundColor: '#1a1a1a',
       borderRadius: 12,
       padding: 20,
       marginBottom: 30,
@@ -306,7 +442,7 @@ export const createSharedStyles = (colorScheme: 'light' | 'dark' | null | undefi
 
     // Success styles
     successContainer: {
-      backgroundColor: colorScheme === 'dark' ? '#1a3d1a' : '#e8f5e8',
+      backgroundColor: '#1a3d1a',
       borderRadius: 12,
       padding: 20,
       marginBottom: 30,
@@ -336,7 +472,7 @@ export const createSharedStyles = (colorScheme: 'light' | 'dark' | null | undefi
     navigationHeader: {
       backgroundColor: colors.background,
       borderBottomWidth: 1,
-      borderBottomColor: colorScheme === 'dark' ? '#333' : '#e0e0e0',
+      borderBottomColor: '#333',
       paddingTop: 10,
       paddingBottom: 10,
     },
@@ -367,7 +503,7 @@ export const createSharedStyles = (colorScheme: 'light' | 'dark' | null | undefi
       paddingHorizontal: 12,
       paddingVertical: 8,
       borderRadius: 8,
-      backgroundColor: colorScheme === 'dark' ? '#2a2a2a' : '#f5f5f5',
+      backgroundColor: '#2a2a2a',
     },
     navigationIcon: {
       fontSize: 16,
@@ -399,7 +535,7 @@ export const createSharedStyles = (colorScheme: 'light' | 'dark' | null | undefi
       width: '100%',
     },
     profileInfo: {
-      backgroundColor: colorScheme === 'dark' ? '#1a1a1a' : '#f8f9fa',
+      backgroundColor: '#1a1a1a',
       borderRadius: 12,
       padding: 16,
       marginBottom: 16,
@@ -435,7 +571,7 @@ export const createSharedStyles = (colorScheme: 'light' | 'dark' | null | undefi
       width: 32,
       height: 32,
       borderRadius: 16,
-      backgroundColor: colorScheme === 'dark' ? '#2a2a2a' : '#f0f0f0',
+      backgroundColor: '#2a2a2a',
       justifyContent: 'center',
       alignItems: 'center',
       zIndex: 1,
@@ -516,7 +652,7 @@ export const createSharedStyles = (colorScheme: 'light' | 'dark' | null | undefi
     },
     dropdownDivider: {
       height: 1,
-      backgroundColor: colorScheme === 'dark' ? '#333' : '#e0e0e0',
+      backgroundColor: '#333',
       marginVertical: 4,
     },
 

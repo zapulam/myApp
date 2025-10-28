@@ -1,12 +1,12 @@
-import { ScreenHeader } from '@/components/screen-header';
+import { GradientBackground } from '@/components/gradient-background';
 import { StyledButton } from '@/components/styled-button';
 import { StyledInput } from '@/components/styled-input';
-import { ThemedView } from '@/components/themed-view';
 import { createSharedStyles } from '@/constants/shared-styles';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { apiService } from '@/services/api';
 import { storageService } from '@/services/storage';
 import { validateLoginForm, validateSignupForm } from '@/utils/validation';
+import { BlurView } from 'expo-blur';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -187,93 +187,139 @@ export default function AuthScreen() {
     }
   };
 
-  const toggleAuthMode = () => {
-    setIsLogin(!isLogin);
-    setEmail('');
-    setPassword('');
-    setName('');
-    setShowPassword(false);
-    setPasswordError('');
-    setEmailError('');
-    setNameError('');
-  };
-
-  const styles = createSharedStyles(colorScheme as 'light' | 'dark' | null | undefined);
+  const styles = createSharedStyles();
 
   return (
-    <ThemedView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}
-      >
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <ScreenHeader
-            title={isLogin ? 'Welcome Back' : 'Create Account'}
-            subtitle={isLogin ? 'Sign in to your account' : 'Sign up to get started'}
-          />
+    <View style={{ flex: 1 }}>
+      <GradientBackground />
+      <View style={styles.authGradientContainer}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.authGradientContainer}
+        >
+          <ScrollView 
+            contentContainerStyle={styles.authScrollContainer}
+            showsVerticalScrollIndicator={false}
+          >
+            <BlurView
+              intensity={60}
+              tint="dark"
+              style={styles.glassCard}
+            >
+              {/* Header */}
+              <View style={styles.authHeader}>
+                <Text style={styles.authTitle}>
+                  {isLogin ? 'Welcome Back' : 'Create Account'}
+                </Text>
+                <Text style={styles.authSubtitle}>
+                  {isLogin ? 'Sign in to continue' : 'Sign up to get started'}
+                </Text>
+              </View>
 
-          {showError && (
-            <View style={styles.errorMessageContainer}>
-              <Text style={styles.errorMessageText}>{errorMessage}</Text>
-            </View>
-          )}
-
-          <View style={styles.form}>
-            {!isLogin && (
-            <StyledInput
-              label="Full Name"
-              value={name}
-              onChangeText={handleNameChange}
-              autoCapitalize="words"
-            />
-            )}
-
-            <StyledInput
-              label="Email"
-              value={email}
-              onChangeText={handleEmailChange}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-
-            <StyledInput
-              label="Password"
-              value={password}
-              onChangeText={handlePasswordChange}
-              secureTextEntry={true}
-            />
-
-            <StyledButton
-              title={isLogin ? 'Sign In' : 'Create Account'}
-              onPress={handleAuth}
-              disabled={loading || !isFormValid()}
-              loading={loading}
-            />
-
-            {isLogin && (
-              <View style={styles.toggleContainer}>
-                <TouchableOpacity onPress={() => router.push('/forgot-password')}>
-                  <Text style={styles.toggleLink}>
-                    Forgot Password?
+              {/* Tab Switcher */}
+              <View style={styles.tabContainer}>
+                <TouchableOpacity
+                  style={[styles.tab, isLogin && styles.activeTab]}
+                  onPress={() => {
+                    if (!isLogin) {
+                      setIsLogin(true);
+                      setEmail('');
+                      setPassword('');
+                      setName('');
+                      setShowPassword(false);
+                      setPasswordError('');
+                      setEmailError('');
+                      setNameError('');
+                      setShowError(false);
+                    }
+                  }}
+                >
+                  <Text style={[styles.tabText, isLogin && styles.activeTabText]}>
+                    Login
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.tab, !isLogin && styles.activeTab]}
+                  onPress={() => {
+                    if (isLogin) {
+                      setIsLogin(false);
+                      setEmail('');
+                      setPassword('');
+                      setName('');
+                      setShowPassword(false);
+                      setPasswordError('');
+                      setEmailError('');
+                      setNameError('');
+                      setShowError(false);
+                    }
+                  }}
+                >
+                  <Text style={[styles.tabText, !isLogin && styles.activeTabText]}>
+                    Sign Up
                   </Text>
                 </TouchableOpacity>
               </View>
-            )}
 
-            <View style={styles.toggleContainer}>
-              <Text style={styles.toggleText}>
-                {isLogin ? "Don't have an account?" : 'Already have an account?'}
-              </Text>
-              <TouchableOpacity onPress={toggleAuthMode}>
-                <Text style={styles.toggleLink}>
-                  {isLogin ? 'Sign Up' : 'Sign In'}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </ThemedView>
+              {showError && (
+                <View style={styles.errorMessageContainer}>
+                  <Text style={styles.errorMessageText}>{errorMessage}</Text>
+                </View>
+              )}
+
+              <View style={styles.authForm}>
+                {!isLogin && (
+                  <View style={styles.authInputContainer}>
+                    <StyledInput
+                      label="Full Name"
+                      value={name}
+                      onChangeText={handleNameChange}
+                      autoCapitalize="words"
+                    />
+                  </View>
+                )}
+
+                <View style={styles.authInputContainer}>
+                  <StyledInput
+                    label="Email"
+                    value={email}
+                    onChangeText={handleEmailChange}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                  />
+                </View>
+
+                <View style={styles.authInputContainer}>
+                  <StyledInput
+                    label="Password"
+                    value={password}
+                    onChangeText={handlePasswordChange}
+                    secureTextEntry={true}
+                  />
+                </View>
+
+                {isLogin && (
+                  <View style={{ alignItems: 'center', marginTop: 4, marginBottom: 16 }}>
+                    <TouchableOpacity onPress={() => router.push('/forgot-password')}>
+                      <Text style={styles.toggleLink}>
+                        Forgot Password?
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+
+                <StyledButton
+                  title={isLogin ? 'Sign In' : 'Create Account'}
+                  onPress={handleAuth}
+                  disabled={loading || !isFormValid()}
+                  loading={loading}
+                  style={styles.authButton}
+                />
+              </View>
+            </BlurView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
+    </View>
   );
 }

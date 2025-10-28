@@ -7,12 +7,12 @@ import { apiService } from '@/services/api';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    Text,
-    View
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Text,
+  View
 } from 'react-native';
 
 export default function VerifyEmailScreen() {
@@ -78,7 +78,7 @@ export default function VerifyEmailScreen() {
     router.replace('/auth');
   };
 
-  const styles = createSharedStyles(colorScheme as 'light' | 'dark' | null | undefined);
+  const styles = createSharedStyles();
 
   if (verifying) {
     return <LoadingScreen message="Verifying your email..." />;

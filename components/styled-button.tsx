@@ -1,5 +1,4 @@
 import { createSharedStyles } from '@/constants/shared-styles';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import React from 'react';
 import { ActivityIndicator, Text, TouchableOpacity } from 'react-native';
 
@@ -25,8 +24,7 @@ export function StyledButton({
   loading = false,
   style,
 }: StyledButtonProps) {
-  const colorScheme = useColorScheme();
-  const styles = createSharedStyles(colorScheme);
+  const styles = createSharedStyles();
 
   const getButtonStyle = () => {
     const baseStyle = size === 'large' ? styles.primaryButtonLarge : styles.primaryButton;
@@ -37,7 +35,14 @@ export function StyledButton({
       case 'danger':
         return [styles.dangerButton, style];
       default:
-        return [baseStyle, disabled && styles.primaryButtonDisabled, style];
+        // Use dark blue when enabled, gray when disabled
+        const backgroundColor = disabled ? '#4a4a4a' : '#1e40af';
+        return [
+          baseStyle,
+          style,
+          { backgroundColor, borderWidth: 0 },
+          disabled && { opacity: 0.6 }
+        ];
     }
   };
 
@@ -48,7 +53,8 @@ export function StyledButton({
       case 'danger':
         return styles.dangerButtonText;
       default:
-        return size === 'large' ? styles.primaryButtonTextLarge : styles.primaryButtonText;
+        // Always use white text with medium weight for primary buttons
+        return { color: 'white', fontSize: 16, fontWeight: '500' as const };
     }
   };
 
@@ -57,10 +63,11 @@ export function StyledButton({
       style={getButtonStyle()}
       onPress={onPress}
       disabled={disabled || loading}
+      activeOpacity={0.8}
     >
       {loading ? (
         <ActivityIndicator 
-          color={colorScheme === 'dark' ? '#000' : 'white'} 
+          color="white" 
           size="small"
         />
       ) : (

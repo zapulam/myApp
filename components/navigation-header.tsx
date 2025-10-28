@@ -1,5 +1,4 @@
 import { createSharedStyles } from '@/constants/shared-styles';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import { router } from 'expo-router';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
@@ -24,8 +23,7 @@ export function NavigationHeader({
   navigationItems = [],
   onLogout,
 }: NavigationHeaderProps) {
-  const colorScheme = useColorScheme();
-  const styles = createSharedStyles(colorScheme);
+  const styles = createSharedStyles();
 
   return (
     <ThemedView style={styles.navigationHeader}>

@@ -39,7 +39,7 @@ export default function HomeScreen() {
     }
   };
 
-  const styles = createSharedStyles(colorScheme as 'light' | 'dark' | null | undefined);
+  const styles = createSharedStyles();
 
   return (
     <ThemedView style={styles.container}>

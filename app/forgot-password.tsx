@@ -1,11 +1,12 @@
 import { ErrorDisplay } from '@/components/error-display';
+import { GradientBackground } from '@/components/gradient-background';
 import { StyledButton } from '@/components/styled-button';
 import { StyledInput } from '@/components/styled-input';
-import { ThemedView } from '@/components/themed-view';
 import { createSharedStyles } from '@/constants/shared-styles';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { apiService } from '@/services/api';
 import { validateForgotPasswordForm } from '@/utils/validation';
+import { BlurView } from 'expo-blur';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -77,108 +78,121 @@ export default function ForgotPasswordScreen() {
   };
 
   const handleBackToLogin = () => {
-    router.push('/auth');
+    router.back();
   };
 
   const handleSignUp = () => {
-    router.push('/auth');
+    router.replace('/auth');
   };
 
-  const styles = createSharedStyles(colorScheme as 'light' | 'dark' | null | undefined);
+  const styles = createSharedStyles();
 
   if (emailSent) {
     return (
-      <ThemedView style={styles.container}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.container}
-        >
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <View style={styles.form}>
-            <View style={styles.successContainer}>
-              <Text style={styles.successText}>
-                Check Your Email
-              </Text>
-              <Text style={styles.successSubtext}>
-                We've sent a password reset link to {email}. Please check your email and click the link to reset your password. The link will expire in 1 hour for security reasons.
-              </Text>
-            </View>
+      <View style={{ flex: 1 }}>
+        <GradientBackground />
+        <View style={styles.authGradientContainer}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.authGradientContainer}
+          >
+            <ScrollView 
+              contentContainerStyle={styles.authScrollContainer}
+              showsVerticalScrollIndicator={false}
+            >
+              <BlurView
+                intensity={60}
+                tint="dark"
+                style={styles.glassCard}
+              >
+                <View style={styles.authHeader}>
+                  <Text style={styles.authTitle}>Check Your Email</Text>
+                  <Text style={styles.authSubtitle}>
+                    We've sent a password reset link to {email}. Please check your email and click the link to reset your password.
+                  </Text>
+                </View>
 
-              <StyledButton
-                title="Back to Login"
-                onPress={handleBackToLogin}
-                style={styles.button}
-              />
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </ThemedView>
+                <StyledButton
+                  title="Back to Login"
+                  onPress={handleBackToLogin}
+                  style={styles.authButton}
+                />
+              </BlurView>
+            </ScrollView>
+          </KeyboardAvoidingView>
+        </View>
+      </View>
     );
   }
 
   return (
-    <ThemedView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}
-      >
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <View style={styles.form}>
-            <View style={styles.header}>
-              <Text style={styles.title}>
-                Forgot Password
-              </Text>
-              <Text style={styles.subtitle}>
-                Enter your email address below and we'll send you a link to reset your password.
-              </Text>
-            </View>
-            <StyledInput
-              label="Email"
-              value={email}
-              onChangeText={handleEmailChange}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-              error={emailError}
-            />
-
-            <StyledButton
-              title="Send Reset Link"
-              onPress={handleForgotPassword}
-              disabled={loading || !isFormValid()}
-              loading={loading}
-            />
-
-            <View style={styles.toggleContainer}>
-              <Text style={styles.toggleText}>
-                Remember your password?
-              </Text>
-              <TouchableOpacity onPress={handleBackToLogin}>
-                <Text style={styles.toggleLink}>
-                  Back to Login
+    <View style={{ flex: 1 }}>
+      <GradientBackground />
+      <View style={styles.authGradientContainer}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.authGradientContainer}
+        >
+          <ScrollView 
+            contentContainerStyle={styles.authScrollContainer}
+            showsVerticalScrollIndicator={false}
+          >
+            <BlurView
+              intensity={60}
+              tint="dark"
+              style={styles.glassCard}
+            >
+              <View style={styles.authHeader}>
+                <Text style={styles.authTitle}>Forgot Password</Text>
+                <Text style={styles.authSubtitle}>
+                  Enter your email address below and we'll send you a link to reset your password.
                 </Text>
-              </TouchableOpacity>
-            </View>
+              </View>
 
-            <View style={styles.toggleContainer}>
-              <Text style={styles.toggleText}>
-                Don't have an account?
-              </Text>
-              <TouchableOpacity onPress={handleSignUp}>
-                <Text style={styles.toggleLink}>
-                  Sign Up
+              <View style={styles.authForm}>
+                <View style={styles.authInputContainer}>
+                  <StyledInput
+                    label="Email"
+                    value={email}
+                    onChangeText={handleEmailChange}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    error={emailError}
+                  />
+                </View>
+
+                <StyledButton
+                  title="Send Reset Link"
+                  onPress={handleForgotPassword}
+                  disabled={loading || !isFormValid()}
+                  loading={loading}
+                  style={styles.authButton}
+                />
+              </View>
+
+              <View style={styles.authToggleContainer}>
+                <Text style={styles.toggleText}>
+                  Remember your password?
                 </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+                <TouchableOpacity onPress={handleBackToLogin}>
+                  <Text style={styles.toggleLink}>
+                    Back to Login
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              
+            </BlurView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
       
       <ErrorDisplay
         message={errorMessage}
         visible={showError}
         onClose={() => setShowError(false)}
       />
-    </ThemedView>
+    </View>
   );
 }

@@ -45,7 +45,7 @@ export default function ProfileScreen() {
     Alert.alert('Coming Soon', 'Profile editing will be available soon!');
   };
 
-  const styles = createSharedStyles(colorScheme as 'light' | 'dark' | null | undefined);
+  const styles = createSharedStyles();
 
   if (loading) {
     return (
@@ -79,7 +79,7 @@ export default function ProfileScreen() {
             <Ionicons 
               name="pencil" 
               size={16} 
-              color={colorScheme === 'dark' ? '#ECEDEE' : '#11181C'} 
+              color="#ECEDEE" 
             />
           </TouchableOpacity>
           

@@ -1,11 +1,12 @@
 import { ErrorDisplay } from '@/components/error-display';
+import { GradientBackground } from '@/components/gradient-background';
 import { StyledButton } from '@/components/styled-button';
 import { StyledInput } from '@/components/styled-input';
-import { ThemedView } from '@/components/themed-view';
 import { createSharedStyles } from '@/constants/shared-styles';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { apiService } from '@/services/api';
 import { validateResetPasswordForm } from '@/utils/validation';
+import { BlurView } from 'expo-blur';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
@@ -111,98 +112,122 @@ export default function ResetPasswordScreen() {
     router.replace('/auth');
   };
 
-  const styles = createSharedStyles(colorScheme as 'light' | 'dark' | null | undefined);
+  const styles = createSharedStyles();
 
   if (resetSuccess) {
     return (
-      <ThemedView style={styles.container}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.container}
-        >
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <View style={styles.form}>
-            <View style={styles.successContainer}>
-              <Text style={styles.successText}>
-                Password Reset Complete
-              </Text>
-              <Text style={styles.successSubtext}>
-                Your password has been successfully reset! You can now log in with your new password.
-              </Text>
-            </View>
+      <View style={{ flex: 1 }}>
+        <GradientBackground />
+        <View style={styles.authGradientContainer}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.authGradientContainer}
+          >
+            <ScrollView 
+              contentContainerStyle={styles.authScrollContainer}
+              showsVerticalScrollIndicator={false}
+            >
+              <BlurView
+                intensity={60}
+                tint="dark"
+                style={styles.glassCard}
+              >
+                <View style={styles.authHeader}>
+                  <Text style={styles.authTitle}>Password Reset Complete</Text>
+                  <Text style={styles.authSubtitle}>
+                    Your password has been successfully reset! You can now log in with your new password.
+                  </Text>
+                </View>
 
-            <StyledButton
-              title="Back to Login"
-              onPress={handleBackToLogin}
-              style={styles.button}
-            />
-          </View>
-        </ScrollView>
-        </KeyboardAvoidingView>
-      </ThemedView>
+                <StyledButton
+                  title="Back to Login"
+                  onPress={handleBackToLogin}
+                  style={styles.authButton}
+                />
+              </BlurView>
+            </ScrollView>
+          </KeyboardAvoidingView>
+        </View>
+      </View>
     );
   }
 
   return (
-    <ThemedView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}
-      >
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <View style={styles.form}>
-            <View style={styles.header}>
-              <Text style={styles.title}>
-                Reset Password
-              </Text>
-              <Text style={styles.subtitle}>
-                Enter your new password below to complete the reset process.
-              </Text>
-            </View>
-            <StyledInput
-              label="New Password"
-              value={newPassword}
-              onChangeText={handlePasswordChange}
-              secureTextEntry={true}
-              error={passwordError}
-              placeholder="Enter your new password"
-            />
-
-            <StyledInput
-              label="Confirm Password"
-              value={confirmPassword}
-              onChangeText={handleConfirmPasswordChange}
-              secureTextEntry={true}
-              error={confirmPasswordError}
-              placeholder="Confirm your new password"
-            />
-
-            <StyledButton
-              title="Reset Password"
-              onPress={handleResetPassword}
-              disabled={loading || !isFormValid()}
-              loading={loading}
-            />
-
-            <View style={styles.toggleContainer}>
-              <Text style={styles.toggleText}>
-                Remember your password?
-              </Text>
-              <TouchableOpacity onPress={handleBackToLogin}>
-                <Text style={styles.toggleLink}>
-                  Back to Login
+    <View style={{ flex: 1 }}>
+      <GradientBackground />
+      <View style={styles.authGradientContainer}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.authGradientContainer}
+        >
+          <ScrollView 
+            contentContainerStyle={styles.authScrollContainer}
+            showsVerticalScrollIndicator={false}
+          >
+            <BlurView
+              intensity={60}
+              tint="dark"
+              style={styles.glassCard}
+            >
+              <View style={styles.authHeader}>
+                <Text style={styles.authTitle}>Reset Password</Text>
+                <Text style={styles.authSubtitle}>
+                  Enter your new password below to complete the reset process.
                 </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+              </View>
+
+              <View style={styles.authForm}>
+                <View style={styles.authInputContainer}>
+                  <StyledInput
+                    label="New Password"
+                    value={newPassword}
+                    onChangeText={handlePasswordChange}
+                    secureTextEntry={true}
+                    error={passwordError}
+                    placeholder="Enter your new password"
+                  />
+                </View>
+
+                <View style={styles.authInputContainer}>
+                  <StyledInput
+                    label="Confirm Password"
+                    value={confirmPassword}
+                    onChangeText={handleConfirmPasswordChange}
+                    secureTextEntry={true}
+                    error={confirmPasswordError}
+                    placeholder="Confirm your new password"
+                  />
+                </View>
+
+                <StyledButton
+                  title="Reset Password"
+                  onPress={handleResetPassword}
+                  disabled={loading || !isFormValid()}
+                  loading={loading}
+                  style={styles.authButton}
+                />
+              </View>
+
+              <View style={styles.authToggleContainer}>
+                <Text style={styles.toggleText}>
+                  Remember your password?
+                </Text>
+                <TouchableOpacity onPress={handleBackToLogin}>
+                  <Text style={styles.toggleLink}>
+                    Back to Login
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </BlurView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
       
       <ErrorDisplay
         message={errorMessage}
         visible={showError}
         onClose={() => setShowError(false)}
       />
-    </ThemedView>
+    </View>
   );
 }
