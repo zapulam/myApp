@@ -14,3 +14,6 @@ export function Text(props: TextProps) {
     />
   );
 }
+
+// Export as ThemedText as well for compatibility
+export const ThemedText = Text;

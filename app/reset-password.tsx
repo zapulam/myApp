@@ -2,6 +2,7 @@ import { ErrorDisplay } from '@/components/error-display';
 import { GradientBackground } from '@/components/gradient-background';
 import { StyledButton } from '@/components/styled-button';
 import { StyledInput } from '@/components/styled-input';
+import { Text } from '@/components/themed-text';
 import { createSharedStyles } from '@/constants/shared-styles';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { apiService } from '@/services/api';
@@ -14,7 +15,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Text,
   TouchableOpacity,
   View
 } from 'react-native';

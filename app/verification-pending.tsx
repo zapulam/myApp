@@ -1,5 +1,6 @@
 import { GradientBackground } from '@/components/gradient-background';
 import { StyledButton } from '@/components/styled-button';
+import { Text } from '@/components/themed-text';
 import { createSharedStyles } from '@/constants/shared-styles';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { apiService } from '@/services/api';
@@ -11,7 +12,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Text,
   View
 } from 'react-native';
 
@@ -73,8 +73,8 @@ export default function VerificationPendingScreen() {
               <View style={styles.instructions}>
                 <Text style={styles.instructionTitle}>What's next?</Text>
                 <Text style={styles.instructionText}>
-                  1. Check your email inbox (and spam folder){'\n'}
-                  2. Click the verification link in the email{'\n'}
+                  1. Check your email inbox{'\n'}
+                  2. Click the verification link{'\n'}
                   3. Return to the app and sign in
                 </Text>
               </View>
@@ -92,6 +92,7 @@ export default function VerificationPendingScreen() {
                   disabled={resending || !email}
                   loading={resending}
                   variant="secondary"
+                  style={{ paddingVertical: 14 }}
                 />
               </View>
             </BlurView>

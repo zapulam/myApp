@@ -52,54 +52,78 @@ def create_verification_email_html(user_name: str, verification_url: str) -> str
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Email Verification</title>
         <style>
+            * {{
+                font-family: Consolas, 'Courier New', 'Lucida Console', Monaco, monospace;
+            }}
             body {{
-                font-family: Arial, sans-serif;
+                font-family: Consolas, 'Courier New', 'Lucida Console', Monaco, monospace;
                 line-height: 1.6;
-                color: #333;
+                color: #ECEDEE;
+                background-color: #000000;
                 max-width: 600px;
                 margin: 0 auto;
                 padding: 20px;
             }}
             .header {{
-                background-color: #4CAF50;
-                color: white;
-                padding: 20px;
+                background: linear-gradient(135deg, #1e40af 0%, #3b5bdb 50%, #ff6b35 100%);
+                color: white !important;
+                padding: 30px 20px;
                 text-align: center;
-                border-radius: 8px 8px 0 0;
+                border-radius: 12px 12px 0 0;
             }}
             .content {{
-                background-color: #f9f9f9;
+                background-color: #151718;
                 padding: 30px;
-                border-radius: 0 0 8px 8px;
+                border-radius: 0 0 12px 12px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                color: #ECEDEE;
             }}
             .button {{
                 display: inline-block;
-                background-color: #4CAF50;
-                color: white;
-                padding: 12px 30px;
+                background-color: #1e40af;
+                color: white !important;
+                padding: 14px 32px;
                 text-decoration: none;
-                border-radius: 5px;
+                border-radius: 12px;
                 margin: 20px 0;
+                font-weight: 500;
             }}
             .footer {{
                 text-align: center;
                 margin-top: 30px;
-                color: #666;
+                color: #888 !important;
                 font-size: 14px;
             }}
             .welcome-note {{
-                background-color: #e8f5e8;
-                border-left: 4px solid #4CAF50;
+                background-color: rgba(30, 64, 175, 0.2);
+                border-left: 4px solid #1e40af;
                 padding: 16px;
                 margin: 20px 0;
-                border-radius: 4px;
+                border-radius: 8px;
+                color: #ECEDEE;
             }}
             .security-note {{
-                background-color: #fff3cd;
-                border-left: 4px solid #ffc107;
+                background-color: rgba(255, 107, 53, 0.2);
+                border-left: 4px solid #ff6b35;
                 padding: 16px;
                 margin: 20px 0;
-                border-radius: 4px;
+                border-radius: 8px;
+                color: #ECEDEE;
+            }}
+            .link-box {{
+                word-break: break-all;
+                background-color: rgba(255, 255, 255, 0.05);
+                padding: 12px;
+                border-radius: 8px;
+                color: #ECEDEE !important;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }}
+            h1, h2 {{
+                color: #ECEDEE !important;
+            }}
+            p {{
+                color: #ECEDEE;
+                margin: 10px 0;
             }}
         </style>
     </head>
@@ -116,7 +140,7 @@ def create_verification_email_html(user_name: str, verification_url: str) -> str
             </div>
             
             <p>If the button doesn't work, you can also copy and paste this link:</p>
-            <p style="word-break: break-all; background-color: #e9e9e9; padding: 10px; border-radius: 4px;">
+            <p class="link-box">
                 {verification_url}
             </p>
             
@@ -171,47 +195,70 @@ def create_password_reset_email_html(user_name: str, reset_url: str) -> str:
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Password Reset</title>
         <style>
+            * {{
+                font-family: Consolas, 'Courier New', 'Lucida Console', Monaco, monospace;
+            }}
             body {{
-                font-family: Arial, sans-serif;
+                font-family: Consolas, 'Courier New', 'Lucida Console', Monaco, monospace;
                 line-height: 1.6;
-                color: #333;
+                color: #ECEDEE;
+                background-color: #000000;
                 max-width: 600px;
                 margin: 0 auto;
                 padding: 20px;
             }}
             .header {{
-                background-color: #ff6b6b;
-                color: white;
-                padding: 20px;
+                background: linear-gradient(135deg, #1e40af 0%, #3b5bdb 50%, #ff6b35 100%);
+                color: white !important;
+                padding: 30px 20px;
                 text-align: center;
-                border-radius: 8px 8px 0 0;
+                border-radius: 12px 12px 0 0;
             }}
             .content {{
-                background-color: #f9f9f9;
+                background-color: #151718;
                 padding: 30px;
-                border-radius: 0 0 8px 8px;
+                border-radius: 0 0 12px 12px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                color: #ECEDEE;
             }}
             .button {{
                 display: inline-block;
-                background-color: #ff6b6b;
-                color: white;
-                padding: 12px 30px;
+                background-color: #1e40af;
+                color: white !important;
+                padding: 14px 32px;
                 text-decoration: none;
-                border-radius: 5px;
+                border-radius: 12px;
                 margin: 20px 0;
+                font-weight: 500;
             }}
             .footer {{
                 text-align: center;
                 margin-top: 30px;
-                color: #666;
+                color: #888 !important;
                 font-size: 14px;
             }}
             .security-note {{
-                background-color: #fff3cd;
-                border-left: 4px solid #ffc107;
+                background-color: rgba(255, 107, 53, 0.2);
+                border-left: 4px solid #ff6b35;
                 padding: 16px;
                 margin: 20px 0;
-                border-radius: 4px;
+                border-radius: 8px;
+                color: #ECEDEE;
+            }}
+            .link-box {{
+                word-break: break-all;
+                background-color: rgba(255, 255, 255, 0.05);
+                padding: 12px;
+                border-radius: 8px;
+                color: #ECEDEE !important;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }}
+            h1, h2 {{
+                color: #ECEDEE !important;
+            }}
+            p {{
+                color: #ECEDEE;
+                margin: 10px 0;
             }}
         </style>
     </head>
@@ -228,7 +275,7 @@ def create_password_reset_email_html(user_name: str, reset_url: str) -> str:
             </div>
             
             <p>If the button doesn't work, you can also copy and paste this link:</p>
-            <p style="word-break: break-all; background-color: #e9e9e9; padding: 10px; border-radius: 4px;">
+            <p class="link-box">
                 {reset_url}
             </p>
             
