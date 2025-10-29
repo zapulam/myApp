@@ -39,9 +39,9 @@ export function GradientBackground() {
     gradientR = '150%';
     stops = [
       { offset: '0%', color: colors.gradientStart, opacity: 1 },
-      { offset: '50%', color: colors.gradientStart, opacity: 0.5 },
-      { offset: '70%', color: colors.gradientMiddle, opacity: 0.5 },
-      { offset: '90%', color: colors.gradientEnd, opacity: 0.75 },
+      { offset: '60%', color: colors.gradientStart, opacity: 0.5 },
+      { offset: '75%', color: colors.gradientMiddle, opacity: 0.5 },
+      { offset: '90%', color: colors.gradientEnd, opacity: 0.5 },
     ];
   } else if (isTablet) {
     // Tablet settings
@@ -51,8 +51,8 @@ export function GradientBackground() {
     stops = [
       { offset: '0%', color: colors.gradientStart, opacity: 1 },
       { offset: '45%', color: colors.gradientStart, opacity: 0.5 },
-      { offset: '60%', color: colors.gradientMiddle, opacity: 0.5 },
-      { offset: '75%', color: colors.gradientEnd, opacity: 0.75 },
+      { offset: '55%', color: colors.gradientMiddle, opacity: 0.5 },
+      { offset: '65%', color: colors.gradientEnd, opacity: 0.5 },
     ];
   } else {
     // Desktop settings
@@ -63,7 +63,7 @@ export function GradientBackground() {
       { offset: '0%', color: colors.gradientStart, opacity: 1 },
       { offset: '20%', color: colors.gradientStart, opacity: 0.5 },
       { offset: '30%', color: colors.gradientMiddle, opacity: 0.5 },
-      { offset: '40%', color: colors.gradientEnd, opacity: 0.75 },
+      { offset: '40%', color: colors.gradientEnd, opacity: 0.5 },
     ];
   }
 
