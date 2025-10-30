@@ -2,7 +2,7 @@ import { createSharedStyles } from '@/constants/shared-styles';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Pressable, View } from 'react-native';
+import { Alert, Animated, Pressable, View } from 'react-native';
 import { ThemedText } from './themed-text';
 import { ThemedView } from './themed-view';
 
@@ -16,6 +16,28 @@ export function ProfileDropdown({ onLogout, userName }: ProfileDropdownProps) {
   const styles = createSharedStyles();
   const dropdownRef = useRef<View>(null);
   const buttonRef = useRef<View>(null);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(-10)).current;
+
+  useEffect(() => {
+    if (isOpen) {
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(slideAnim, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      fadeAnim.setValue(0);
+      slideAnim.setValue(-10);
+    }
+  }, [isOpen, fadeAnim, slideAnim]);
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -81,9 +103,16 @@ export function ProfileDropdown({ onLogout, userName }: ProfileDropdownProps) {
       </Pressable>
 
       {isOpen && (
-        <View 
+        <Animated.View 
           ref={dropdownRef} 
-          style={{ position: 'absolute', top: 56, right: 0, zIndex: 10000 }}
+          style={{ 
+            position: 'absolute', 
+            top: 56, 
+            right: 0, 
+            zIndex: 10000,
+            opacity: fadeAnim,
+            transform: [{ translateY: slideAnim }],
+          }}
           pointerEvents="box-none"
           // @ts-ignore
           dataSet={{ dropdown: 'true' }}
@@ -149,7 +178,7 @@ export function ProfileDropdown({ onLogout, userName }: ProfileDropdownProps) {
               <ThemedText style={[styles.dropdownText, { fontSize: 14 }]}>Logout</ThemedText>
             </Pressable>
             </ThemedView>
-        </View>
+        </Animated.View>
       )}
     </View>
   );
