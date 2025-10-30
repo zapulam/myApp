@@ -8,7 +8,7 @@ export const createSharedStyles = () => {
     // Container styles
     container: {
       flex: 1,
-      backgroundColor: colors.background,
+      backgroundColor: colors.background1,
     },
     scrollContainer: {
       flexGrow: 1,
@@ -228,7 +228,7 @@ export const createSharedStyles = () => {
       paddingTop: 20, // Consistent top padding for floating labels
       paddingRight: 40,
       fontSize: 14,
-      backgroundColor: colors.background,
+      backgroundColor: colors.background1,
       color: colors.text,
       minHeight: 50, // Ensure consistent height
     },
@@ -359,7 +359,7 @@ export const createSharedStyles = () => {
       zIndex: 1000,
     },
     errorBox: {
-      backgroundColor: colors.background,
+      backgroundColor: colors.background1,
       borderRadius: 12,
       padding: 20,
       margin: 20,
@@ -473,7 +473,7 @@ export const createSharedStyles = () => {
 
     // Navigation styles
     navigationHeader: {
-      backgroundColor: colors.background,
+      backgroundColor: colors.background2,
       borderBottomWidth: 1,
       borderBottomColor: '#333',
       paddingTop: 10,
@@ -483,7 +483,7 @@ export const createSharedStyles = () => {
       maxWidth: 1200,
       alignSelf: 'center',
       width: '100%',
-      paddingHorizontal: 20,
+      paddingHorizontal: 16,
     },
     navigationContent: {
       flexDirection: 'row',
@@ -625,7 +625,7 @@ export const createSharedStyles = () => {
       alignItems: 'flex-end',
     },
     dropdownContainer: {
-      backgroundColor: colors.background,
+      backgroundColor: colors.background1,
       borderRadius: 12,
       paddingVertical: 8,
       minWidth: 160,
@@ -641,7 +641,7 @@ export const createSharedStyles = () => {
     dropdownItem: {
       flexDirection: 'row',
       alignItems: 'center',
-      paddingHorizontal: 16,
+      paddingHorizontal: 8,
       paddingVertical: 12,
       gap: 12,
     },
@@ -649,9 +649,6 @@ export const createSharedStyles = () => {
       fontSize: 16,
       color: colors.text,
       fontWeight: '500',
-    },
-    logoutText: {
-      color: '#ff4444',
     },
     dropdownDivider: {
       height: 1,
@@ -662,7 +659,7 @@ export const createSharedStyles = () => {
     // Dashboard styles
     dashboardContainer: {
       flex: 1,
-      padding: 20,
+      padding: 16,
       maxWidth: 1200,
       alignSelf: 'center',
       width: '100%',

@@ -1,18 +1,49 @@
 import { createSharedStyles } from '@/constants/shared-styles';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
-import { Alert, Modal, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Alert, Pressable, View } from 'react-native';
 import { ThemedText } from './themed-text';
 import { ThemedView } from './themed-view';
 
 export interface ProfileDropdownProps {
   onLogout: () => void;
+  userName?: string;
 }
 
-export function ProfileDropdown({ onLogout }: ProfileDropdownProps) {
+export function ProfileDropdown({ onLogout, userName }: ProfileDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const styles = createSharedStyles();
+  const dropdownRef = useRef<View>(null);
+  const buttonRef = useRef<View>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      if (isOpen && dropdownRef.current && buttonRef.current) {
+        const dropdown = (dropdownRef.current as any)._nativeTag;
+        const button = (buttonRef.current as any)._nativeTag;
+        const target = event.target;
+        
+        // Check if click is outside both dropdown and button
+        if (!target.closest(`[data-dropdown="true"]`) && !target.closest(`[data-button="true"]`)) {
+          setIsOpen(false);
+        }
+      }
+    };
+
+    if (isOpen) {
+      // Add event listener for web
+      if (typeof document !== 'undefined') {
+        document.addEventListener('mousedown', handleClickOutside);
+      }
+    }
+
+    return () => {
+      if (typeof document !== 'undefined') {
+        document.removeEventListener('mousedown', handleClickOutside);
+      }
+    };
+  }, [isOpen]);
 
   const handleSettings = () => {
     setIsOpen(false);
@@ -30,72 +61,96 @@ export function ProfileDropdown({ onLogout }: ProfileDropdownProps) {
   };
 
   return (
-    <>
-      <TouchableOpacity
-        style={styles.profileButton}
-        onPress={() => setIsOpen(true)}
+    <View style={{ position: 'relative', zIndex: 9999 }}>
+      <Pressable
+        ref={buttonRef}
+        style={({ hovered }: any) => [
+          styles.profileButton,
+          { cursor: 'pointer' } as any,
+          hovered && { opacity: 0.8 }
+        ]}
+        onPress={() => setIsOpen(!isOpen)}
+        // @ts-ignore
+        dataSet={{ button: 'true' }}
       >
         <Ionicons 
-          name="person" 
+          name="person-outline" 
           size={20} 
           color="#ECEDEE" 
         />
-      </TouchableOpacity>
+      </Pressable>
 
-      <Modal
-        visible={isOpen}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setIsOpen(false)}
-      >
-        <TouchableOpacity
-          style={styles.dropdownOverlay}
-          activeOpacity={1}
-          onPress={() => setIsOpen(false)}
+      {isOpen && (
+        <View 
+          ref={dropdownRef} 
+          style={{ position: 'absolute', top: 56, right: 0, zIndex: 10000 }}
+          pointerEvents="box-none"
+          // @ts-ignore
+          dataSet={{ dropdown: 'true' }}
         >
-          <View style={styles.dropdownWrapper}>
-            <ThemedView style={styles.dropdownContainer}>
-            <TouchableOpacity
-              style={styles.dropdownItem}
+          <ThemedView style={[styles.dropdownContainer, { pointerEvents: 'auto', backgroundColor: '#010409', borderWidth: 1, borderColor: '#333333' }]}>
+            {userName && (
+              <>
+                <View style={{ paddingHorizontal: 16, paddingVertical: 12, alignItems: 'center' }}>
+                  <ThemedText style={{ fontSize: 14, fontWeight: '500', color: '#ECEDEE' }}>
+                    {userName}
+                  </ThemedText>
+                </View>
+                <View style={styles.dropdownDivider} />
+              </>
+            )}
+            <Pressable
+              style={({ pressed, hovered }: any) => [
+                styles.dropdownItem,
+                { marginHorizontal: 8, borderRadius: 8, cursor: 'pointer' } as any,
+                hovered && { backgroundColor: '#2a2a2a' }
+              ]}
               onPress={handleProfile}
             >
               <Ionicons 
-                name="person" 
+                name="person-outline" 
                 size={16} 
                 color="#ECEDEE" 
               />
-              <ThemedText style={styles.dropdownText}>Profile</ThemedText>
-            </TouchableOpacity>
+              <ThemedText style={[styles.dropdownText, { fontSize: 14 }]}>Profile</ThemedText>
+            </Pressable>
 
-            <TouchableOpacity
-              style={styles.dropdownItem}
+            <Pressable
+              style={({ pressed, hovered }: any) => [
+                styles.dropdownItem,
+                { marginHorizontal: 8, borderRadius: 8, cursor: 'pointer' } as any,
+                hovered && { backgroundColor: '#2a2a2a' }
+              ]}
               onPress={handleSettings}
             >
               <Ionicons 
-                name="settings" 
+                name="settings-outline" 
                 size={16} 
                 color="#ECEDEE" 
               />
-              <ThemedText style={styles.dropdownText}>Settings</ThemedText>
-            </TouchableOpacity>
+              <ThemedText style={[styles.dropdownText, { fontSize: 14 }]}>Settings</ThemedText>
+            </Pressable>
 
             <View style={styles.dropdownDivider} />
 
-            <TouchableOpacity
-              style={styles.dropdownItem}
+            <Pressable
+              style={({ pressed, hovered }: any) => [
+                styles.dropdownItem,
+                { marginHorizontal: 8, borderRadius: 8, cursor: 'pointer' } as any,
+                hovered && { backgroundColor: '#2a2a2a' }
+              ]}
               onPress={handleLogout}
             >
               <Ionicons 
-                name="log-out" 
+                name="log-out-outline" 
                 size={16} 
-                color="#ff4444" 
+                color="#ECEDEE" 
               />
-              <ThemedText style={[styles.dropdownText, styles.logoutText]}>Logout</ThemedText>
-            </TouchableOpacity>
+              <ThemedText style={[styles.dropdownText, { fontSize: 14 }]}>Logout</ThemedText>
+            </Pressable>
             </ThemedView>
-          </View>
-        </TouchableOpacity>
-      </Modal>
-    </>
+        </View>
+      )}
+    </View>
   );
 }

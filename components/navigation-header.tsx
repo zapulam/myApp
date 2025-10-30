@@ -15,6 +15,7 @@ export interface NavigationHeaderProps {
     icon?: string;
   }>;
   onLogout?: () => void;
+  userName?: string;
 }
 
 export function NavigationHeader({
@@ -22,18 +23,19 @@ export function NavigationHeader({
   showProfileButton = true,
   navigationItems = [],
   onLogout,
+  userName,
 }: NavigationHeaderProps) {
   const styles = createSharedStyles();
 
   return (
-    <ThemedView style={styles.navigationHeader}>
-      <View style={styles.navigationHeaderContent}>
-        <View style={styles.navigationContent}>
+    <ThemedView style={[styles.navigationHeader, { overflow: 'visible', zIndex: 2 }]}>
+      <View style={[styles.navigationHeaderContent, { overflow: 'visible' }]}>
+        <View style={[styles.navigationContent, { overflow: 'visible' }]}>
           <TouchableOpacity onPress={() => router.push('/home')}>
             <ThemedText style={styles.navigationTitle}>{title}</ThemedText>
           </TouchableOpacity>
           
-          <View style={styles.navigationActions}>
+          <View style={[styles.navigationActions, { overflow: 'visible' }]}>
             {navigationItems.map((item, index) => (
               <TouchableOpacity
                 key={index}
@@ -48,7 +50,7 @@ export function NavigationHeader({
             ))}
             
             {showProfileButton && onLogout && (
-              <ProfileDropdown onLogout={onLogout} />
+              <ProfileDropdown onLogout={onLogout} userName={userName} />
             )}
           </View>
         </View>

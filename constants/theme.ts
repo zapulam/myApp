@@ -4,7 +4,8 @@
 
 export const Colors = {
   text: '#ECEDEE',
-  background: '#151718',
+  background1: '#0d1117',
+  background2: '#010409',
   tint: '#fff',
   // Gradient colors - Black at top (majority) to Blue to Orange at bottom
   gradientStart: '#000000',

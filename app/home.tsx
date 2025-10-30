@@ -47,6 +47,7 @@ export default function HomeScreen() {
         title="MyApp"
         showProfileButton={true}
         onLogout={handleLogout}
+        userName={user?.name}
       />
 
       <View style={styles.dashboardContainer}>

@@ -39,7 +39,7 @@ export function GradientBackground() {
     gradientR = '150%';
     stops = [
       { offset: '0%', color: colors.gradientStart, opacity: 1 },
-      { offset: '60%', color: colors.gradientStart, opacity: 0.5 },
+      { offset: '60%', color: colors.gradientStart, opacity: 0.3 },
       { offset: '75%', color: colors.gradientMiddle, opacity: 0.5 },
       { offset: '90%', color: colors.gradientEnd, opacity: 0.5 },
     ];
@@ -50,7 +50,7 @@ export function GradientBackground() {
     gradientR = '135%';
     stops = [
       { offset: '0%', color: colors.gradientStart, opacity: 1 },
-      { offset: '45%', color: colors.gradientStart, opacity: 0.5 },
+      { offset: '45%', color: colors.gradientStart, opacity: 0.3 },
       { offset: '55%', color: colors.gradientMiddle, opacity: 0.5 },
       { offset: '65%', color: colors.gradientEnd, opacity: 0.5 },
     ];
@@ -61,7 +61,7 @@ export function GradientBackground() {
     gradientR = '120%';
     stops = [
       { offset: '0%', color: colors.gradientStart, opacity: 1 },
-      { offset: '20%', color: colors.gradientStart, opacity: 0.5 },
+      { offset: '20%', color: colors.gradientStart, opacity: 0.3 },
       { offset: '30%', color: colors.gradientMiddle, opacity: 0.5 },
       { offset: '40%', color: colors.gradientEnd, opacity: 0.5 },
     ];
